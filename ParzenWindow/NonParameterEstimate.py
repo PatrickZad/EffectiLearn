@@ -13,7 +13,7 @@ def expWinFunc(vector):
     pass
 def parzenEstimate(sampleSet,width,winFunc='normal'):
     n,d=sampleSet.shape()
-    v=width**d
+    v=(width/n**0.5)**d
     if winFunc is 'normal':
         winFunc=normalWinFunc
     elif winFunc is 'cube':
