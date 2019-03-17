@@ -1,27 +1,20 @@
 import numpy as np
-import pandas as pd
+import math
 def normalWinFunc(vector):
     l=vector**2
-    s=0
-    for num in l:
-        s+=num
-    
-    pass
+    return math.exp(np.sum(l)/(-2))/(2*math.pi)**0.5
 def cubeWinFunc(vector):
-    pass
+    result=1;
+    for i in np.abs(vector):
+        if i>0.5:
+            result=0;
+            break
+    return result
 def expWinFunc(vector):
-    pass
-def parzenEstimate(sampleSet,width,winFunc='normal'):
+    return math.exp(-np.linalg.norm(vector))
+def parzenEstimate(sampleSet,width,winFunc=normalWinFunc):
     n,d=sampleSet.shape()
     v=(width/n**0.5)**d
-    if winFunc is 'normal':
-        winFunc=normalWinFunc
-    elif winFunc is 'cube':
-        winFunc=cubeWinFunc
-    elif winFunc is 'exp':
-        winFunc=expWinFunc
-    else:
-        pass
     def probability(sample):
         s=0
         for i in range(0,n):
