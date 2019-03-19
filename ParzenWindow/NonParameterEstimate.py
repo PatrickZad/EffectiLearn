@@ -21,3 +21,5 @@ def parzenEstimate(sampleSet,width,winFunc=normalWinFunc):
             s+=winFunc((sample-sampleSet[i])/width)/v
         return s/n
     return probability
+if __name__=='__main__':
+    pass

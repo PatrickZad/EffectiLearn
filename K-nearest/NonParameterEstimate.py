@@ -11,4 +11,6 @@ def knearestEstimate(sampleset,k):
         r=dist[m-1]
         v=math.pi**(d/2)*r**d/math.gamma(d/2+1)
         return m/n/v
+if __name__=='__main__':
+    pass
 
