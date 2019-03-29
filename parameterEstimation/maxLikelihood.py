@@ -15,7 +15,8 @@ def mle(sampleSet,densityExp,*vars):
         for sampd in sample]) for sample in sampleSet])
     params=lfunc.free_symbols
     loglfunc=sympy.expand_log(sympy.log(lfunc))
-    solve=sympy.solve([sympy.diff(loglfunc,param) for param in params],*param)
+    solve=sympy.solve([sympy.diff(loglfunc,param) \
+        for param in params],*param)
     return solve
 
 if __name__=="__main__":

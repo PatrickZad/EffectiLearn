@@ -9,7 +9,7 @@ def knearestEstimate(sampleSet,k):
     Returns:
         估计的概率密度函数
     '''
-    n,d=np.shape(sampleset)
+    n,d=np.shape(sampleSet)
     m=(k*n**0.5)
     def probability(sample):
         '''
