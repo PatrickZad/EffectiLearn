@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
-from nonParameterEstimation import knearest
+import sys
+import os
+sys.path.append(os.getcwd())
+import nonParameterEstimation.knearest
 def naiveBayes(sampleData,lableArray):
     '''
     朴素贝叶斯分类器，暂认为数值型的属性都是连续型，字符型的都是离散型
@@ -13,12 +16,14 @@ def naiveBayes(sampleData,lableArray):
     lableProb=pd.Serise([(len([i for i in lableArray and i==lable])+1)/\
         (len(lableArray)+len(lableset)) for lable in lableset],index=lableset)#拉普拉斯平滑    
     #类条件概率
+    row,column=np.shape(sampleData)
     
-def continuous(attrArray,lableArray):
+def continuous(attrArray,lableArray,lableSet=None):
     '''
     return:条件样本概率密度，Series对象，索引是类别标签
     '''
-    lableSet=set(lableArray)
+    if lableSet is None:
+        lableSet=set(lableArray)
     attrSet=set(attrArray)
     lableDict={}
     for lable in lableSet:
@@ -29,11 +34,12 @@ def continuous(attrArray,lableArray):
     densityList=[knearest.knearestEstimate([samp for samp in lableDict[lable]]) for lable in lableSet]
     return pd.Series(densityList,index=lableSet)
 
-def discrete(attrArray,lableArray): 
+def discrete(attrArray,lableArray,lableSet=None): 
     '''
     return:条件样本概率的DataFrame，行索引是属性值类别，列索引是标签类别
     '''
-    lableSet=set(lableArray)
+    if lableSet is None:
+        lableSet=set(lableArray)
     attrSet=set(attrArray)
     lableDict={}
     for lable in lableSet:
@@ -53,6 +59,12 @@ def discrete(attrArray,lableArray):
 if __name__=='__main__':
     import requests
     import os
+    print(sys.path)
+    sys.path.append(os.getcwd())
+    print(sys.path)
+    samparray=np.array([[1,'aa',3,'cc'],[2,'bb',4,'dd']])
+    c1=samparray[:,0]
+    c2=samparray[:,1]
     if 'iris.data' not in os.listdir():
         r=requests.get('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data')
         with open('./iris.data','w') as f:
