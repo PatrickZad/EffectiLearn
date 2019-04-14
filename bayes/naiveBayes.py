@@ -4,64 +4,130 @@ import sys
 import os
 sys.path.append(os.getcwd())
 class NaiveBayesClassifier():
+    '''
+    朴素贝叶斯分类器，暂认为数值型的属性都是连续型，字符型的都是离散型
+    '''
     def __init__(self,data,lable):
+        '''
+        完成模型训练
+        args:
+            data:样本的各属性组成的二维数组
+            lable:样本的指定标签
+        return:
+            none
+        '''
         self.__lableset=set(lable)
         self.__samparray=data
         self.__lablearray=lable
-
-    def naiveBayes(self):
-        '''
-        朴素贝叶斯分类器，暂认为数值型的属性都是连续型，字符型的都是离散型
-        args:
-            sampleSet:DataFrame
-            lableArray:DataFrame
-        returns:
-            classifier:function
-        '''
-        #类先验概率,Serise对象
-        lableProb=pd.Serise([(len([i for i in self.__lablearray and i==lable])+1)/\
+        self.__attrset=[]
+        row,column=np.shape(data)
+        #类先验概率
+        self.__lableProb=pd.Serise([(len([i for i in self.__lablearray and i==lable])+1)/\
             (len(self.__lablearray)+len(self.__lableset)) for lable in self.__lableset],\
-                index=self.__lableset)#拉普拉斯平滑    
-        #类条件概率
-        row,column=np.shape(self.__samparray)
+                index=self.__lableset)#拉普拉斯平滑         
+        #类条件属性概率
+        for i in range(column):
+            self.__attrset.append(Attr(data[:,i],self.__lablearray,self.__lableset))
 
-    
-    def __continuous(self,attrArray):
-        import nonParameterEstimation.knearest
+    def naiveBayesClassify(self,samp):
         '''
-        return:连续属性的条件样本概率密度，Series对象，索引是类别标签
+        对给定样本进行分类
+        args:
+            samp:一个样本点，array-like
+        return:
+            分类结果，classification result
         '''
-        attrSet=set(attrArray)
-        lableDict={}
+        sampLable=None
+        lableMaxProb=0
         for lable in self.__lableset:
-            lableDict.setdefault(lable,[])
-        #条件样本集合，dict对象
-        for i in range(len(attrArray)):
-            lableDict[self.__lablearray[i]].append(attrArray[i])
-        densityList=[knearest.knearestEstimate([samp for samp in lableDict[lable]]) for lable in self.__lableset]
-        return pd.Series(densityList,index=self.__lableset)
+            lableCd=1
+            for i in range(len(samp)):
+                lableCd*=self.__attrset[i].cdProb(samp[i],lable)#独立性假设
+            if lableCd*self.__lableProb[lable]>lableMaxProb:
+                sampLable=lable
+        return sampLable
 
-    def __discrete(self,attrArray): 
+    class Attr():
         '''
-        return:离散属性的条件样本概率的DataFrame，行索引是属性值类别，列索引是标签类别
+        完成处理单个属性的操作
         '''
-        if lableSet is None:
-            lableSet=set(lableArray)
-        attrSet=set(attrArray)
-        lableDict={}
-        for lable in lableSet:
-            lableDict.setdefault(lable,[])
-        #条件样本集合，dict对象
-        seriselist=[] 
-        for i in range(len(attrArray)):
-            lableDict[lableArray[i]].append(attrArray[i])
-        for lable in lableSet:
-            serise=pd.Series([(len([samp for samp in lableDict[lable] and samp==attr])+1)/\
-                (len(lableDict[lable])+len(attrSet)) for attr in attrSet],index=attrSet)#拉普拉斯平滑
-            seriselist.append(serise)
-        for i in range(len(seriselist)):
-            lableDict[lableDict.keys()[i]]=seriselist[i]
-        return pd.DataFrame(lableDict)
+        def __init__(self,attrarray,lablearray,lableset=None):
+            '''
+            判断属性是否连续，计算全部的类条件概率
+            args:
+                attrarray:给定属性的所有样本值
+                lablearray:全部样本的类别标签
+                lableset:类别标签的set
+            return:
+                none
+            '''
+            self.__attrarray=attrarray
+            self.__lablearray=lablearray
+            if lableset is not None:
+                self.__lableset=lableset
+            else:
+                self.__lableset=set(lablearray)
+            if attrarray.dtype is 'object':
+                self.__classCdProb=self.__discreteCdProb(attrarray)
+                self.__isDiscrete=True
+            else:
+                self.__classCdProb=self.__continuousCdProb(attrarray)
+                self.__isDiscrete=False
+        def cdProb(self,value,lable):
+            '''
+            对给定的属性值返回其在指定类条件下的概率
+            args:
+                value:给定的属性值
+                lable:给定的类别标签
+            return:
+
+            '''
+            if self.__isDiscrete:
+                return self.__classCdProb[value,lable]
+            else:
+                return self.__classCdProb[lable](value)
+        def __continuousCdProb(self):
+            import nonParameterEstimation.knearest
+            '''
+            计算单个连续属性的类条件概率
+            args:
+                none
+            return:
+                连续属性的条件样本概率密度，Series对象，索引是类别标签
+            '''
+            lableDict={}
+            for lable in self.__lableset:
+                lableDict.setdefault(lable,[])
+            #条件样本集合，dict对象
+            for i in range(len(self.__attrarray)):
+                lableDict[self.__lablearray[i]].append(self.__attrarray[i])
+            densityList=[knearest.knearestEstimate([samp for samp in lableDict[lable]]) for lable in self.__lableset]
+            return pd.Series(densityList,index=self.__lableset)
+
+        def __discreteCdProb(self): 
+            '''
+            计算单个离散属性的类条件概率
+            args:
+                none
+            return:
+                离散属性的条件样本概率的DataFrame，行索引是属性值类别，列索引是标签类别
+            '''
+            attrSet=set(self.__attrarray)
+            lableDict={}
+            for lable in self.__lableset:
+                lableDict.setdefault(lable,[])
+            #条件样本集合，dict对象
+            seriselist=[] 
+            for i in range(len(self.__attrarray)):
+                lableDict[self.__lablearray[i]].append(self.__attrarray[i])
+            for lable in self.__lableset:
+                serise=pd.Series([(len([samp for samp in lableDict[lable] and samp==attr])+1)/\
+                    (len(lableDict[lable])+len(attrSet)) for attr in attrSet],index=attrSet)#拉普拉斯平滑
+                seriselist.append(serise)
+            for i in range(len(seriselist)):
+                lableDict[lableDict.keys()[i]]=seriselist[i]
+            return pd.DataFrame(lableDict)
+
 
 if __name__=='__main__':
     import requests
