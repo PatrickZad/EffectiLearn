@@ -18,11 +18,3 @@ def mle(sampleSet,densityExp,*vars):
     solve=sympy.solve([sympy.diff(loglfunc,param) \
         for param in params],*param)
     return solve
-
-if __name__=="__main__":
-    x,y=sympy.symbols('x y');
-    exp=x+y-x**y
-    e1=exp.subs(x,1)
-    param=e1.free_symbols
-    e1=exp.subs(x,2)
-    e1=exp.subs(x,3)
