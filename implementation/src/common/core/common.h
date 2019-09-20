@@ -10,7 +10,6 @@ namespace patrick
         unsigned int length=0;
     public:
         Vector(double row[], unsigned int length);
-        Vector(std::initializer_list<double> row);
         Vector(const Vector& vector);
         Vector(Vector&& vector);
         ~Vector();

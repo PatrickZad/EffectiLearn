@@ -3,5 +3,6 @@
 #include <exception>
 namespace patrick{
     class OutOfIndexException:std::exception{};
+    class CalculationNotValidException:std::exception{};
 }
 #endif
