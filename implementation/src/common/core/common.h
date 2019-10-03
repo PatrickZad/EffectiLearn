@@ -9,7 +9,7 @@ namespace patrick
         double* array;
         unsigned int length=0;
     public:
-        Vector(double row[], unsigned int length);
+        Vector(double* row, unsigned int length);
         Vector(const Vector& vector);
         Vector(Vector&& vector);
         ~Vector();
@@ -18,10 +18,10 @@ namespace patrick
         Vector& operator=(Vector&& vector);
         Vector operator+(const Vector& vector);
         Vector& operator+=(const Vector& vector);
-        Vector operator*(const Vector& vector);
+        double operator*(const Vector& vector);
         Vector operator-(const Vector& vector);
         Vector& operator-=(const Vector& vector);
-        double operator[](unsigned int index);
+        double& operator[](unsigned int index);
     };
 } // namespace patrick
 

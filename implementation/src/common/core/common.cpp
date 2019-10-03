@@ -56,17 +56,68 @@ Vector Vector::operator+(const Vector& vector)
 {
     if (this->length!=vector.length)
     {
-        throw 
+        throw CalculationNotValidException{};
     }
-    
+    double sum[this->length];
+    for (unsigned int i = 0; i < this->length; i++){
+        sum[i]=this->array[i]+vector.array[i];
+    }    
+    return Vector{sum,this->length};
 }
 Vector& Vector::operator+=(const Vector& vector)
-{}
-Vector Vector::operator*(const Vector& vector)
-{}
+{
+    if (this->length!=vector.length)
+    {
+        throw CalculationNotValidException{};
+    }
+    for (unsigned int i = 0; i < this->length; i++)
+    {
+        this->array[i]+=vector.array[i];
+    }
+    return *this;
+}
+double Vector::operator*(const Vector& vector)
+{
+    if (this->length!=vector.length)
+    {
+        throw CalculationNotValidException{};
+    }
+    double sum=0;
+    for (unsigned int i = 0; i < this->length; i++)
+    {
+        sum+=(*this)[i]*vector.array[i];
+    }
+    return sum;
+}
 Vector Vector::operator-(const Vector& vector)
-{}
+{
+    if (this->length!=vector.length)
+    {
+        throw CalculationNotValidException{};
+    }
+    double diff[this->length];
+    for (unsigned int i = 0; i < this->length; i++){
+        diff[i]=this->array[i]-vector.array[i];
+    }    
+    return Vector{diff,this->length};
+}
 Vector& Vector::operator-=(const Vector& vector)
-{}
-double Vector::operator[](unsigned int index)
-{}
+{
+    if (this->length!=vector.length)
+    {
+        throw CalculationNotValidException{};
+    }
+    for (unsigned int i = 0; i < this->length; i++)
+    {
+        this->array[i]-=vector.array[i];
+    }
+    return *this;
+}
+double& Vector::operator[](unsigned int index)
+{
+    if (this->length<=index)
+    {
+        throw OutOfIndexException{};
+    }
+    return this->array[index];
+}
