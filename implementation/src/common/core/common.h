@@ -7,9 +7,10 @@ namespace patrick
     {
     private:
         double* array;
-        unsigned int length=0;
+        long length=0;
     public:
-        Vector(double* row, unsigned int length);
+        Vector(double* row, long length);
+        Vector(long length, double init=0);
         Vector(const Vector& vector);
         Vector(Vector&& vector);
         ~Vector();
@@ -19,9 +20,10 @@ namespace patrick
         Vector operator+(const Vector& vector);
         Vector& operator+=(const Vector& vector);
         double operator*(const Vector& vector);
+        Vector& operator*(double factor);
         Vector operator-(const Vector& vector);
         Vector& operator-=(const Vector& vector);
-        double& operator[](unsigned int index);
+        double& operator[](long index);
     };
 } // namespace patrick
 

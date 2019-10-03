@@ -2,12 +2,21 @@
 #include <initializer_list>
 #include "exception/exception.h"
 using namespace patrick;
-Vector::Vector(double* row, unsigned int length)
+Vector::Vector(double* row, long length)
 {
     array=new double[length];
-    for (unsigned int i = 0; i < length; i++)
+    for (long i = 0; i < length; i++)
     {
         array[i]=row[i];
+    }
+    this->length=length;
+}
+
+Vector::Vector(long length, double init){
+    array=new double[length];
+    for (long i = 0; i < length; i++)
+    {
+        array[i]=init;
     }
     this->length=length;
 }
@@ -15,7 +24,7 @@ Vector::Vector(double* row, unsigned int length)
 Vector::Vector(const Vector& vector)
 {
     array=new double[vector.length];
-    for (unsigned int i = 0; i < vector.length; i++)
+    for (long i = 0; i < vector.length; i++)
     {
         array[i]=(vector.array)[i];
     }
@@ -38,7 +47,7 @@ Vector& Vector::operator=(const Vector& vector)
 {
     delete[] array;
     array=new double[vector.length];
-    for (unsigned int i = 0; i < vector.length; i++)
+    for (long i = 0; i < vector.length; i++)
     {
         array[i]=(vector.array)[i];
     }
@@ -59,7 +68,7 @@ Vector Vector::operator+(const Vector& vector)
         throw CalculationNotValidException{};
     }
     double sum[this->length];
-    for (unsigned int i = 0; i < this->length; i++){
+    for (long i = 0; i < this->length; i++){
         sum[i]=this->array[i]+vector.array[i];
     }    
     return Vector{sum,this->length};
@@ -70,7 +79,7 @@ Vector& Vector::operator+=(const Vector& vector)
     {
         throw CalculationNotValidException{};
     }
-    for (unsigned int i = 0; i < this->length; i++)
+    for (long i = 0; i < this->length; i++)
     {
         this->array[i]+=vector.array[i];
     }
@@ -83,7 +92,7 @@ double Vector::operator*(const Vector& vector)
         throw CalculationNotValidException{};
     }
     double sum=0;
-    for (unsigned int i = 0; i < this->length; i++)
+    for (long i = 0; i < this->length; i++)
     {
         sum+=(*this)[i]*vector.array[i];
     }
@@ -96,7 +105,7 @@ Vector Vector::operator-(const Vector& vector)
         throw CalculationNotValidException{};
     }
     double diff[this->length];
-    for (unsigned int i = 0; i < this->length; i++){
+    for (long i = 0; i < this->length; i++){
         diff[i]=this->array[i]-vector.array[i];
     }    
     return Vector{diff,this->length};
@@ -107,13 +116,13 @@ Vector& Vector::operator-=(const Vector& vector)
     {
         throw CalculationNotValidException{};
     }
-    for (unsigned int i = 0; i < this->length; i++)
+    for (long i = 0; i < this->length; i++)
     {
         this->array[i]-=vector.array[i];
     }
     return *this;
 }
-double& Vector::operator[](unsigned int index)
+double& Vector::operator[](long index)
 {
     if (this->length<=index)
     {
