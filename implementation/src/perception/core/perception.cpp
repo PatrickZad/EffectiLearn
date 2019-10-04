@@ -9,14 +9,14 @@ Perception::Perception(double* dataArray, long width, int* lable, long length)
         data.push_back(dataVector);
     }
 }
+
 void Perception::train(double rate){
-    //TODO improvment matrix calculation and storage
-    double gram[dataLength][dataLength];
+    double gram[dataLength*(dataLength+1)/2]={0};
     for (long i = 0; i < dataLength; i++)
     {
-        for (long j = 0; j < dataLength; j++)
+        for (long j = i; j < dataLength; j++)
         {
-            gram[i][j]=data[i]*data[j];
+            gram[i*(2*dataLength-i+1)/2+j]=data[i]*data[j];
         }
     }
     
@@ -31,7 +31,7 @@ void Perception::train(double rate){
             double result = bias;
             for (long j = 0; j < dataLength; j++)
             {
-                result+=a[j]*lable[j]*(data[j]*data[i]);
+                result+=a[j]*lable[j]*getGram(gram,j,i);
             }
             if (lable[i]*result<=0)
             {
@@ -52,4 +52,18 @@ int Perception::classify(double* dataRow,long width){
     Vector data{dataRow,width};
     double result=weight*data+bias;
     return result>0 ? 1 : -1 ;
+}
+
+double Perception::getGram(double* gram,long i, long j){
+    long row,column;
+    if (i>j)
+    {
+        row=j;
+        column=i;
+    }else
+    {
+        row=i;
+        column=j;
+    }
+    return *(gram+row*(2*dataLength-row+1)/2+j);
 }

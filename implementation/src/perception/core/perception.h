@@ -18,7 +18,8 @@ namespace patrick{
         Perception(double* data, long width, int* lable, long length); 
         void train(double rate=0.1);//nonnumeric lables should be transfered to int value
         int classify(double* dataRow,long width);//return index of type in typeColumn
-
+    private:
+        double getGram(double* gram,long i, long j);
     };
 
     class DescriminationFunc
