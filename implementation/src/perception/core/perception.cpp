@@ -1,9 +1,13 @@
 #include "perception.h"
 using namespace patrick;
-Perception::Perception(double* data, long width, int* lable, long length)
-: weight{width},lable{length},bias{0}
+Perception::Perception(double* dataArray, long width, int* lable, long length)
+: dataWidth{width},dataLength{length},weight{width},lable{length},bias{0}
 {
-
+    for (long i = 0; i < length; i++)
+    {
+        Vector dataVector{dataArray+i*width,width};
+        data.push_back(dataVector);
+    }
 }
 void Perception::train(double rate){
     //TODO improvment matrix calculation and storage
