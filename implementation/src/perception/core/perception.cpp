@@ -54,6 +54,18 @@ int Perception::classify(double* dataRow,long width){
     return result>0 ? 1 : -1 ;
 }
 
+double Perception::test(double* data, long width, int* lable, long length){
+    long error=0;
+    for (long i = 0; i < length; i++)
+    {
+        if (classify(data+i*width,width)!=*(lable+i))
+        {
+            error++;
+        }
+    }
+    return (double)error/length;
+}
+
 double Perception::getGram(double* gram,long i, long j){
     long row,column;
     if (i>j)
