@@ -24,6 +24,7 @@ namespace patrick
         Vector operator-(const Vector& vector);
         Vector& operator-=(const Vector& vector);
         double& operator[](long index);
+        long size();
     };
 } // namespace patrick
 

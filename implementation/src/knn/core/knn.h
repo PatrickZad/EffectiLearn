@@ -1,5 +1,5 @@
-#ifndef CORE_Knn_H
-#define CORE_Knn_H
+#ifndef CORE_KNN_H
+#define CORE_KNN_H
 #include "common/core/common.h"
 namespace patrick{
     class Knn
@@ -11,5 +11,6 @@ namespace patrick{
         ~Knn();
     };
     double euclideanDistance();
+    double manhattanDistance();
 }
 #endif

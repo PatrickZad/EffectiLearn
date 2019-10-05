@@ -130,3 +130,8 @@ double& Vector::operator[](long index)
     }
     return this->array[index];
 }
+
+long Vector::size()
+{
+    return length;
+}
