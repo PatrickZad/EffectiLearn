@@ -26,6 +26,13 @@ namespace patrick
         double& operator[](long index);
         long size();
     };
+    
+    class DistanceFunc
+    {
+    public:
+        double operator()(Vector& vec0, Vector& vec1);
+    };
+    
 } // namespace patrick
 
 #endif

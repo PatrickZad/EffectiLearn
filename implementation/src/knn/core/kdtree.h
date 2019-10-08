@@ -7,8 +7,9 @@ namespace patrick{
     {
     public:
         KDNode* root;
+        DistanceFunc distFunc;
     public:
-        KDTree(std::vector<Vector>& data);
+        KDTree(std::vector<Vector>& data, DistanceFunc distFunc);
         ~KDTree();
         std::vector<Vector> searchNN(Vector& sample, unsigned long k);
     private:
@@ -27,6 +28,7 @@ namespace patrick{
     double getMid(std::vector<Vector>& collection, unsigned long dimension);
     unsigned long partition(std::vector<Vector>& collection, unsigned long start, unsigned long end, unsigned long dimension);
     KDNode* findArea(Vector& sample, KDNode* root);
+    void searchTree(Vector& sample, DistanceFunc distFunc, KDNode* root, DistanceHeap& heap);
 
     struct HeapItem
     {
@@ -46,8 +48,7 @@ namespace patrick{
         ~DistanceHeap();
 
         void push(double distance, Vector* dataPtr);
-        Vector* pop();
-        Vector* top();
+        double topDistance();
     
     private:
         void heapifyTopDown(unsigned long index);

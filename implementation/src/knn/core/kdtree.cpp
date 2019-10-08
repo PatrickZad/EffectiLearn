@@ -6,7 +6,7 @@ using namespace patrick;
  *Construct KDTree
  *last dimension of a Vector is supposed to be its lable
  */
-KDTree::KDTree(std::vector<Vector>& data)
+KDTree::KDTree(std::vector<Vector>& data, DistanceFunc distFunc): distFunc{distFunc}
 {
     root=new KDNode{};
     buildTree(root,data,0);
@@ -31,7 +31,9 @@ void KDTree::releaseTree(KDNode* root)
 }
 
 std::vector<Vector> KDTree::searchNN(Vector& sample, unsigned long k){
-    //TODO
+    DistanceHeap heap{k};
+    searchTree(sample,distFunc, root, heap);
+    return heap.tovector();
 }
 
 void KDTree::buildTree(KDNode* parent,std::vector<Vector>& dataLeft,unsigned long depth)
@@ -126,7 +128,7 @@ unsigned long patrick::partition(std::vector<Vector>& collection, unsigned long 
     return left-1;
 }
 
-KDNode* findArea(Vector& sample, KDNode* root){
+KDNode* patrick::findArea(Vector& sample, KDNode* root){
     KDNode* area=root;
     KDNode* nextArea=root;
     while (nextArea!=nullptr)
@@ -141,6 +143,40 @@ KDNode* findArea(Vector& sample, KDNode* root){
         }
     }
     return area;
+}
+
+void patrick::searchTree(Vector& sample, DistanceFunc distFunc, KDNode* root, DistanceHeap& heap)
+{
+    KDNode* area=findArea(sample,root);
+    for (Vector data : area->data)
+    {
+        double distance=distFunc(data,sample);
+        if (heap.topDistance>distance || heap.topDistance<0)
+        {
+            heap.push(distance,&data);
+        }
+    }
+    while (area != root)
+    {
+        Vector distVector{sample.size};
+        area=area->parent;
+        distVector[area->partitionDim]=sample[area->partitionDim];
+        if (distFunc(sample,distVector)<heap.topDistance)
+        {
+            searchTree(sample,distFunc,area == area->left ? area->left : area->right,heap);
+        }else
+            if (distFunc(sample,distVector)==heap.topDistance)
+            {
+                for (Vector data : area->data)
+                {
+                    double distance=distFunc(data,sample);
+                    if (heap.topDistance>distance || heap.topDistance<0)
+                    {
+                        heap.push(distance,&data);
+                    }
+                }
+            }
+    }
 }
 
 DistanceHeap::DistanceHeap(unsigned long length):dataLength{0}, arrayLength{length}
@@ -178,6 +214,16 @@ void DistanceHeap::push(double distance, Vector* dataPtr)
 double DistanceHeap::topDistance()
 {
     return array[0].distance;
+}
+
+std::vector<Vector> DistanceHeap::tovector()
+{
+    std::vector<Vector> vec{};
+    for (unsigned long i = 0; i < dataLength; i++)
+    {
+        vec.push_back(*(array[i].dataPtr));
+    }
+    return vec;
 }
 
 void DistanceHeap::heapifyTopDown(unsigned long index)
