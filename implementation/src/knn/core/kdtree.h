@@ -7,14 +7,13 @@ namespace patrick{
     {
     public:
         KDNode* root;
-        long k;
     public:
-        KDTree(std::vector<Vector>& data, long k);
+        KDTree(std::vector<Vector>& data);
         ~KDTree();
-        std::vector<Vector> searchNN(Vector& sample);
+        std::vector<Vector> searchNN(Vector& sample, unsigned long k);
     private:
         void releaseTree(KDNode* root);
-        void buildTree(KDNode* parent,std::vector<Vector>& dataLeft,long dimension);
+        void buildTree(KDNode* parent,std::vector<Vector>& dataLeft,unsigned long dimension);
     };
     struct KDNode
     {
@@ -22,9 +21,41 @@ namespace patrick{
         KDNode* parent;
         KDNode* left;
         KDNode* right; 
+        unsigned long partitionDim;
     };
-    double getMid(std::vector<Vector>& collection, long dimension);
-    long partition(std::vector<Vector>& collection, long start, long end, long dimension);
+
+    double getMid(std::vector<Vector>& collection, unsigned long dimension);
+    unsigned long partition(std::vector<Vector>& collection, unsigned long start, unsigned long end, unsigned long dimension);
+    KDNode* findArea(Vector& sample, KDNode* root);
+
+    struct HeapItem
+    {
+        double distance;
+        Vector* dataPtr;
+    };
+    
+
+    class DistanceHeap
+    {
+    private:
+        HeapItem* array;
+        unsigned long arrayLength;
+        unsigned long dataLength;        
+    public:
+        DistanceHeap(unsigned long length);
+        ~DistanceHeap();
+
+        void push(double distance, Vector* dataPtr);
+        Vector* pop();
+        Vector* top();
+    
+    private:
+        void heapifyTopDown(unsigned long index);
+        void heapifyDownTop(unsigned long index);
+    };
+    
+    
+    
 }
 
 #endif
