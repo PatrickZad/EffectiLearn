@@ -49,6 +49,7 @@ namespace patrick{
 
         void push(double distance, Vector* dataPtr);
         double topDistance();
+        std::vector<Vector> tovector();
     
     private:
         void heapifyTopDown(unsigned long index);
