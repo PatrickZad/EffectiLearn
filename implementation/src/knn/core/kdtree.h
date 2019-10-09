@@ -9,8 +9,13 @@ namespace patrick{
         KDNode* root;
         DistanceFunc distFunc;
     public:
-        KDTree(std::vector<Vector>& data, DistanceFunc distFunc);
+        KDTree(DistanceFunc distFunc);
+        KDTree();
+        //KDTree(std::vector<Vector>& data, DistanceFunc distFunc);
         ~KDTree();
+
+        void setDistFunc(DistanceFunc distFunc);
+        void build(std::vector<Vector>& data);
         std::vector<Vector> searchNN(Vector& sample, unsigned long k);
     private:
         void releaseTree(KDNode* root);

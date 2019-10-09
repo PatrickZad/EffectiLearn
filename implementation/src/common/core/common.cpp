@@ -2,7 +2,7 @@
 #include <initializer_list>
 #include "exception/exception.h"
 using namespace patrick;
-Vector::Vector(double* row, long length)
+Vector::Vector(double* row, unsigned long length)
 {
     array=new double[length];
     for (long i = 0; i < length; i++)
@@ -12,7 +12,7 @@ Vector::Vector(double* row, long length)
     this->length=length;
 }
 
-Vector::Vector(long length, double init){
+Vector::Vector(unsigned long length, double init){
     array=new double[length];
     for (long i = 0; i < length; i++)
     {
@@ -122,7 +122,7 @@ Vector& Vector::operator-=(const Vector& vector)
     }
     return *this;
 }
-double& Vector::operator[](long index)
+double& Vector::operator[](unsigned long index)
 {
     if (this->length<=index)
     {
@@ -134,4 +134,21 @@ double& Vector::operator[](long index)
 long Vector::size()
 {
     return length;
+}
+
+Vector& Vector::concat(const Vector& vec)
+{
+    double * array=new double[this->length+vec.length];
+    for (unsigned long i = 0; i < this->length; i++)
+    {
+        *(array+i)=*(this->array+i);
+    }
+    for (unsigned long i = 0; i < vec.length; i++)
+    {
+        *(array+this->length+i)=*(vec.array+i);
+    }
+    delete this->array;
+    this->array=array;
+    this->length=this->length+vec.length;
+    return *this;
 }

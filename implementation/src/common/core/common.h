@@ -9,8 +9,8 @@ namespace patrick
         double* array;
         long length=0;
     public:
-        Vector(double* row, long length);
-        Vector(long length, double init=0);
+        Vector(double* row, unsigned long length);
+        Vector(unsigned long length, double init=0);
         Vector(const Vector& vector);
         Vector(Vector&& vector);
         ~Vector();
@@ -23,8 +23,9 @@ namespace patrick
         Vector& operator*(double factor);
         Vector operator-(const Vector& vector);
         Vector& operator-=(const Vector& vector);
-        double& operator[](long index);
+        double& operator[](unsigned long index);
         long size();
+        Vector& concat(const Vector& vec);
     };
     
     class DistanceFunc

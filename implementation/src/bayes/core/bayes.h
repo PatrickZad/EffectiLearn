@@ -6,10 +6,10 @@ namespace patrick{
     class NaiveBayes
     {
     private:
-        std::vector<std::vector<std::vector<unsigned long>>> conMatrices;//elements are pointers of matrix counting samples by lables-attributs
+        std::vector<std::vector<std::vector<double>>> conMatrices;//elements are pointers of matrix counting samples by lables-attributs
         std::vector<std::map<double,unsigned long>> conAttrMaps;//attr_value-maxtrix_index sets
         std::map<long, unsigned long> lableIndexMap;//lable-maxtrix_index sets
-        std::map<long,unsigned long> lableProbMap;
+        std::map<long,double> lableProbMap;
     public:
         NaiveBayes();
         void train(double* data, unsigned long width, long* lable, unsigned long length);

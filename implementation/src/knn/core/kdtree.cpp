@@ -6,10 +6,22 @@ using namespace patrick;
  *Construct KDTree
  *last dimension of a Vector is supposed to be its lable
  */
+/*
 KDTree::KDTree(std::vector<Vector>& data, DistanceFunc distFunc): distFunc{distFunc}
 {
     root=new KDNode{};
     buildTree(root,data,0);
+}
+*/
+
+KDTree::KDTree(DistanceFunc distFunc):distFunc{distFunc}
+{
+    root=new KDNode{std::vector<Vector>{}, nullptr, nullptr, nullptr, 0};
+}
+
+KDTree::KDTree()
+{
+    root=new KDNode{std::vector<Vector>{}, nullptr, nullptr, nullptr, 0};
 }
 
 KDTree::~KDTree()
@@ -28,6 +40,11 @@ void KDTree::releaseTree(KDNode* root)
         releaseTree(root->right);
     }
     delete root;
+}
+
+void KDTree::build(std::vector<Vector>& data)
+{
+    buildTree(root, data, 0);
 }
 
 std::vector<Vector> KDTree::searchNN(Vector& sample, unsigned long k){

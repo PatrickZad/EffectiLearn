@@ -48,7 +48,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
     //initialize matrices
     for (unsigned long i = 0; i < width; i++)
     {
-        std::vector<std::vector<unsigned long>> conMatrix{lableIndexMap.size()};
+        std::vector<std::vector<double>> conMatrix{lableIndexMap.size()};
         for (unsigned long j = 0; j < lableIndexMap.size(); j++)
         {
             conMatrix[j]=std::vector<unsigned long> {attrSets[i].size(),0};
@@ -69,7 +69,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
     std::map<long,unsigned long>::iterator mapIter=lableAmountMap.begin();
     for (; mapIter != lableAmountMap.end(); mapIter++)
     {
-        lableProbMap[mapIter->second]=lableAmountMap[mapIter->second]/length;
+        lableProbMap[mapIter->second]=(double)lableAmountMap[mapIter->second]/length;
     }
     
     //change to probability maxtrices
@@ -81,9 +81,42 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
             std::set<double>::iterator attrIter=attrSets[i].begin();
             for (; attrIter != attrSets[i].end(); attrIter++)
             {
-                unsigned long &num=conMatrices[i][mapIter->second][*attrIter];
+                double &num=conMatrices[i][mapIter->second][*attrIter];
                 num=(num+1)/(lableAmountMap[mapIter->first]+attrSets[i].size());
             }
         }
     }
+}
+
+long NaiveBayes::classify(double* dataRow,unsigned long width)
+{
+    long lable=0;
+    double prob=0;
+    std::map<long,double>::iterator iter=lableProbMap.begin();
+    for ( ; iter != lableProbMap.end(); iter++)
+    {
+        double product=iter->second;
+        for (unsigned long i = 0; i < width; i++)
+        {
+            product*=conMatrices[i][iter->first][conAttrMaps[i][*(dataRow+i)]];
+        }
+        if (product>prob)
+        {
+            lable=iter->first;
+        }
+    }
+    return lable;
+}
+
+double NaiveBayes::test(double* data, unsigned long width, long* lable, unsigned long length)
+{
+    unsigned long error=0;
+    for (unsigned long i = 0; i < length; i++)
+    {
+        if (*(lable+i)!=classify(data+i, width))
+        {
+            error++;
+        }
+    }
+    return 1-(double)error/length;
 }
