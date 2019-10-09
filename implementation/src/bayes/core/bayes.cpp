@@ -6,6 +6,7 @@ using namespace patrick;
 void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned long length)
 {
     //build lable map
+    std::map<long,unsigned long> lableAmountMap;
     unsigned long index=0;
     for (unsigned long i = 0; i < length; i++)
     {
@@ -64,5 +65,25 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
             conMatrices[j][*(lable+i)][valueIndex]++;
         }
     }
+    //build lable probability map
+    std::map<long,unsigned long>::iterator mapIter=lableAmountMap.begin();
+    for (; mapIter != lableAmountMap.end(); mapIter++)
+    {
+        lableProbMap[mapIter->second]=lableAmountMap[mapIter->second]/length;
+    }
     
+    //change to probability maxtrices
+    for (unsigned long i = 0; i < width; i++)
+    {
+        mapIter=lableAmountMap.begin();
+        for (; mapIter != lableAmountMap.end(); mapIter++)
+        {
+            std::set<double>::iterator attrIter=attrSets[i].begin();
+            for (; attrIter != attrSets[i].end(); attrIter++)
+            {
+                unsigned long &num=conMatrices[i][mapIter->second][*attrIter];
+                num=(num+1)/(lableAmountMap[mapIter->first]+attrSets[i].size());
+            }
+        }
+    }
 }
