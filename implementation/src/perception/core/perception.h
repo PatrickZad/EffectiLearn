@@ -13,6 +13,7 @@ namespace patrick{
         double bias;
         std::vector<patrick::Vector> data;
         patrick::Vector lable;
+        double rate;
 
     public:
         Perception(double* data, long width, int* lable, long length); 

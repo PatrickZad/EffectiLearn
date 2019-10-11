@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 namespace patrick{
-    class NaiveBayes
+    class NaiveBayes:Classifier
     {
     private:
         std::vector<std::vector<std::vector<double>>> conMatrices;//elements are pointers of matrix counting samples by lables-attributs
@@ -14,7 +14,7 @@ namespace patrick{
         NaiveBayes();
         void train(double* data, unsigned long width, long* lable, unsigned long length);
         long classify(double* dataRow,unsigned long width);
-        double test(double* data, unsigned long width, long* lable, unsigned long length);
+        //double test(double* data, unsigned long width, long* lable, unsigned long length);
     };
 }
 #endif

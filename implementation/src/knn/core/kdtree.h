@@ -7,14 +7,14 @@ namespace patrick{
     {
     public:
         KDNode* root;
-        DistanceFunc distFunc;
+        DistanceFunc& distFunc;
     public:
-        KDTree(DistanceFunc distFunc);
+        KDTree(DistanceFunc& distFunc);
         KDTree();
         //KDTree(std::vector<Vector>& data, DistanceFunc distFunc);
         ~KDTree();
 
-        void setDistFunc(DistanceFunc distFunc);
+        void setDistFunc(DistanceFunc& distFunc);
         void build(std::vector<Vector>& data);
         std::vector<Vector> searchNN(Vector& sample, unsigned long k);
     private:

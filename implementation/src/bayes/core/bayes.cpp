@@ -51,7 +51,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
         std::vector<std::vector<double>> conMatrix{lableIndexMap.size()};
         for (unsigned long j = 0; j < lableIndexMap.size(); j++)
         {
-            conMatrix[j]=std::vector<unsigned long> {attrSets[i].size(),0};
+            conMatrix[j]=std::vector<double> (attrSets[i].size,0);
         }
         conMatrices.push_back(conMatrix);
     }
@@ -107,7 +107,7 @@ long NaiveBayes::classify(double* dataRow,unsigned long width)
     }
     return lable;
 }
-
+/*
 double NaiveBayes::test(double* data, unsigned long width, long* lable, unsigned long length)
 {
     unsigned long error=0;
@@ -119,4 +119,4 @@ double NaiveBayes::test(double* data, unsigned long width, long* lable, unsigned
         }
     }
     return 1-(double)error/length;
-}
+}*/

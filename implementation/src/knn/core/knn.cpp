@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 using namespace patrick;
- Knn::Knn(DistanceFunc distFunc, unsigned long k):k{k}
+ Knn::Knn(DistanceFunc& distFunc, unsigned long k):k{k}
 {
     tree.setDistFunc(distFunc);
 }
@@ -50,7 +50,7 @@ long Knn::classify(double* dataRow,unsigned long width)
     }
     return lable;
 }
-
+/*
 double Knn::test(double* data, unsigned long width, long* lable, unsigned long length)
 {
     unsigned long error=0;
@@ -69,4 +69,4 @@ double Knn::test(double* data, unsigned long width, long* lable, unsigned long l
         delete[] sample;
     }
     return 1-(double)error/length;
-}
+}*/
