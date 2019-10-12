@@ -5,34 +5,47 @@
 namespace patrick
 {
     template<class T>
-    class TargetFuntion
-    {
-    public:
-        T minimum;//target of optimizer
-        FirstOrderDerivative derivative;
-    public:
-        TargetFuntion(T& init, FirstOrderDerivative& derivative):minimum{init}{};//initial value of target
-        virtual double operator()()=0;//tarin data
-    };
-
     class FirstOrderDerivative
     {
     public:
-        Vector operator()(std::vector<Vector>& train);
+        virtual T operator()(T& input)=0;
     };
-    
-    class RapidGradientDescentRateTarget:TargetFuntion<double>
+
+    template<class T>
+    class TargetFunction
+    {
+    public:
+        FirstOrderDerivative<T>& derivative;
+    public:
+        TargetFunction(FirstOrderDerivative<T>& derivative):derivative{derivative}{};//initial value of target
+        virtual double operator()(T& input)=0;//tarin data
+        Vector RapidGradientDescent(Vector& init, double minVariation=0.001,unsigned int maxReapt=200);
+    };
+    class RateTargetDerivative : public FirstOrderDerivative<double>
     {
     private:
-        /* data */
+       FirstOrderDerivative<Vector>& originDerivative;
+       Vector originInput;
     public:
-        using TargetFuntion::TargetFuntion;
-        double operator()();
+        RateTargetDerivative(FirstOrderDerivative<Vector>& originDerivative, Vector& originInput)
+            :originDerivative{originDerivative},originInput{originInput}{};
+        double operator()(double& input);
     };
     
-    double oneDimSearch(TargetFuntion<double>& target);
-    Vector RapidGradientDescent(TargetFuntion<Vector>& target, double minVariation=0.001,unsigned int maxReapt=200);
+    class RateTarget : public TargetFunction<double>
+    {
+    private:
+        TargetFunction<Vector>& originTarget;
+        Vector& originInput;
+
+    public:
+        RateTarget(TargetFunction<Vector>& originTarget, Vector& originInput)
+            :TargetFunction{*(new RateTargetDerivative{originTarget.derivative,originInput})}, 
+                originTarget{originTarget} ,originInput{originInput}{};
+        ~RateTarget();
+        double operator()(double& input);
+        double searchRate(double minVariation=0.001, unsigned int maxReapt=200);//one-dimention search
+    };
     
 } // namespace patrick
-
 #endif
