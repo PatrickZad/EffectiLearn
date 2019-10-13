@@ -19,7 +19,7 @@ namespace patrick
     public:
         TargetFunction(FirstOrderDerivative<T>& derivative):derivative{derivative}{};//initial value of target
         virtual double operator()(T& input)=0;//tarin data
-        Vector RapidGradientDescent(Vector& init, double minVariation=0.001,unsigned int maxReapt=200);
+        T RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200);
     };
     class RateTargetDerivative : public FirstOrderDerivative<double>
     {

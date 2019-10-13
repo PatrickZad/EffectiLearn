@@ -3,15 +3,15 @@
 using namespace patrick;
 
 template<class T>
-Vector TargetFunction<T>::RapidGradientDescent(Vector& init, double minVariation=0.001,unsigned int maxReapt=200)
+T TargetFunction<T>::RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200)
 {
-    Vector minimumPoint=init;
+    T minimumPoint=init;
     double previous=(*this)(minimumPoint);
     for (unsigned int i = 0; i < maxReapt; i++)
     {
         RateTarget rateTarget{*this, minimumPoint};
         double rate=rateTarget.searchRate();
-        Vector newInput=minimum-derivative(minimumPoint)*rate;
+        T newInput=minimum-derivative(minimumPoint)*rate;
         double newValue=*(this)(newInput);
         if (std::fabs(newValue-previous)<minVariation)
         {
