@@ -4,5 +4,6 @@
 namespace patrick{
     class OutOfIndexException:std::exception{};
     class CalculationNotValidException:std::exception{};
+    class ParameterInvalidException:std::exception{};
 }
 #endif
