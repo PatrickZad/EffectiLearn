@@ -3,7 +3,7 @@
 #include <exception>
 namespace patrick{
     class OutOfIndexException:std::exception{};
-    class CalculationNotValidException:std::exception{};
+    class CalculationInvalidException:std::exception{};
     class ParameterInvalidException:std::exception{};
 }
 #endif

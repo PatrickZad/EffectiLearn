@@ -38,7 +38,8 @@ Vector::Vector(Vector&& vector)
     vector.length=0;
 }
 
-Vector::~Vector(){
+Vector::~Vector()
+{
     delete[] array;
     length=0;
 }
@@ -66,7 +67,7 @@ Vector& Vector::operator+=(const Vector& vector)
 {
     if (this->length!=vector.length)
     {
-        throw CalculationNotValidException{};
+        throw CalculationInvalidException{};
     }
     for (long i = 0; i < this->length; i++)
     {
@@ -79,7 +80,7 @@ Vector& Vector::operator-=(const Vector& vector)
 {
     if (this->length!=vector.length)
     {
-        throw CalculationNotValidException{};
+        throw CalculationInvalidException{};
     }
     for (long i = 0; i < this->length; i++)
     {
@@ -126,7 +127,7 @@ double patrick::operator*(const Vector& v1, const Vector& v2)
 {
     if (v1.size() != v2.size())
     {
-        throw CalculationNotValidException{};
+        throw CalculationInvalidException{};
     }
     double sum=0;
     for (long i = 0; i < v1.size(); i++)
@@ -154,7 +155,7 @@ Vector patrick::operator+(const Vector& v1, const Vector& v2)
 {
     if (v1.size() != v2.size())
     {
-        throw CalculationNotValidException{};
+        throw CalculationInvalidException{};
     }
     double sum[v1.size()];
     for (long i = 0; i < v1.size(); i++){
@@ -168,7 +169,7 @@ Vector patrick::operator-(const Vector& v1, const Vector& v2)
 {
     if (v1.size() != v2.size())
     {
-        throw CalculationNotValidException{};
+        throw CalculationInvalidException{};
     }
     double diff[v1.size()];
     for (long i = 0; i < v1.size(); i++){

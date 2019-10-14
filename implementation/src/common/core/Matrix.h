@@ -14,15 +14,17 @@ namespace patrick
     public:
         Matrix(unsigned long  length, unsigned long width, double init=0);
         Matrix(Vector& vec, short shape=VECTOR_COLUMN);
+        Matrix(const Matrix& m);
+        Matrix(Matrix&& m);
         ~Matrix();
-        unsigned long getLength();
-        unsigned long getWidth();
+        unsigned long getLength()const;
+        unsigned long getWidth()const;
 
         Matrix& operator=(const Matrix& m);
         Matrix& operator=(Matrix&& m);
         Matrix& operator+=(const Matrix& m);
         Matrix& operator-=(const Matrix& m);
-        double* operator[](unsigned long index);
+        double* operator[](unsigned long index)const;
     };
 
     Matrix operator*(const Matrix& m1, const Matrix& m2);

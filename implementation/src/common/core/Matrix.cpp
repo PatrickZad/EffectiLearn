@@ -15,9 +15,8 @@ Matrix::Matrix(unsigned long  length, unsigned long width, double init)
     
 }
 
-Matrix::Matrix(Vector& vec, short shape=VECTOR_COLUMN)
+Matrix::Matrix(Vector& vec, short shape=VECTOR_COLUMN): start{new double[vec.size()]}
 {
-    start=new double[vec.size()];
     for (unsigned long i = 0; i < vec.size(); i++)
     {
         *(start+i)=vec[i];
@@ -37,7 +36,183 @@ Matrix::Matrix(Vector& vec, short shape=VECTOR_COLUMN)
     }
 }
 
+Matrix::Matrix(const Matrix& m)
+    : width{m.width}, length{m.length}, start{new double[m.width*m.length]}
+{
+    for (unsigned long i = 0; i < m.length; i++)
+    {
+        for (unsigned long j = 0; j < m.width; j++)
+        {
+            *this[i][j]=m[i][j];
+        }
+    }
+}
+
+Matrix::Matrix(Matrix&& m) : width{m.width}, length{m.length}, start{m.start}
+{
+    m.start=nullptr;
+    m.getWidth=0;
+    m.getWidth=0;
+}
+
 Matrix::~Matrix()
 {
     delete[] start;
+    width=0;
+    length=0;
+    start=nullptr;
+}
+
+unsigned long Matrix::getLength()const
+{
+    return length;
+}
+
+unsigned long Matrix::getWidth()const
+{
+    return width;
+}
+
+Matrix& Matrix::operator=(const Matrix& m)
+{
+    delete[] start;
+    start=new double[m.length*m.width];
+    length=m.length;
+    width=m.width;
+    for (unsigned long i = 0; i < m.length; i++)
+    {
+        for (unsigned long j = 0; j < m.width; j++)
+        {
+            *this[i][j]=m[i][j];
+        }
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator=(Matrix&& m)
+{
+    delete[] start;
+    start=m.start;
+    length=m.length;
+    width=m.width;
+    m.start=nullptr;
+    m.getWidth=0;
+    m.getWidth=0;
+    return *this;
+}
+
+Matrix& Matrix::operator+=(const Matrix& m)
+{
+    if(m.length!=length || m.width !=width)
+    {
+        throw CalculationInvalidException{};
+    }
+    for (unsigned long i = 0; i < m.length; i++)
+    {
+        for (unsigned long j = 0; j < m.width; j++)
+        {
+            *this[i][j]+=m[i][j];
+        }
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator+=(const Matrix& m)
+{
+    if(m.length!=length || m.width !=width)
+    {
+        throw CalculationInvalidException{};
+    }
+    for (unsigned long i = 0; i < m.length; i++)
+    {
+        for (unsigned long j = 0; j < m.width; j++)
+        {
+            *this[i][j]-=m[i][j];
+        }
+    }
+    return *this;
+}
+
+double* Matrix::operator[](unsigned long index)const
+{
+    return start+index*width;
+}
+
+inline double innerProduct(double* row, unsigned long width, double* column, unsigned long interval)
+{
+    double sum=0;
+    for (unsigned long i = 0; i < width; i++)
+    {
+        sum+=(*(row+i)) * (*(column+i*interval));
+    }
+    return sum;
+}
+
+Matrix patrick::operator*(const Matrix& m1, const Matrix& m2)
+{
+    if (m1.getWidth()!=m2.getLength())
+    {
+        throw CalculationInvalidException{};
+    }
+    Matrix result{m1.getLength(),m2.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=innerProduct(m1[i], m1.getWidth, m2[0]+j, m2.getWidth());
+        }
+    }
+    return result;
+}
+
+Matrix patrick::operator*(const Matrix& m, double num)
+{
+    Matrix result{m.getLength(),m.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=m[i][j]*num;
+        }
+    }
+    return result;
+}
+
+Matrix patrick::operator*(double num, const Matrix& m)
+{
+    return m*num;
+}
+
+Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
+{
+    if (m1.getLength()!=m2.getLength() || m1.getWidth()!=m2.getWidth())
+    {
+        throw CalculationInvalidException{};
+    }
+    Matrix result{m1.getLength(),m1.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=m1[i][j]+m2[i][j];
+        }
+    }
+    return result;
+}
+
+Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
+{
+    if (m1.getLength()!=m2.getLength() || m1.getWidth()!=m2.getWidth())
+    {
+        throw CalculationInvalidException{};
+    }
+    Matrix result{m1.getLength(),m1.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=m1[i][j]-m2[i][j];
+        }
+    }
+    return result;
 }
