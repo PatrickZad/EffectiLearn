@@ -20,12 +20,14 @@ namespace patrick
     public:
         TargetFunction(FirstOrderDerivative<T>& derivative):derivative{derivative}{};//initial value of target
         virtual double operator()(T& input)=0;//tarin data
-        T RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200);
+        //T RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200);
+        T GradientDescent(T& init, double rate, double minVariation=0.001,unsigned int maxReapt=200)
     };
+    template<class T>
     class RateTargetDerivative : public FirstOrderDerivative<double>
     {
     private:
-       FirstOrderDerivative<Vector>& originDerivative;
+       FirstOrderDerivative<T>& originDerivative;
        Vector originInput;
     public:
         RateTargetDerivative(FirstOrderDerivative<Vector>& originDerivative, Vector& originInput)
@@ -33,14 +35,15 @@ namespace patrick
         double operator()(double& input);
     };
     
+    template<class T>
     class RateTarget : public TargetFunction<double>
     {
     private:
-        TargetFunction<Vector>& originTarget;
+        TargetFunction<T>& originTarget;
         Vector& originInput;
 
     public:
-        RateTarget(TargetFunction<Vector>& originTarget, Vector& originInput)
+        RateTarget(TargetFunction<T>& originTarget, Vector& originInput)
             :TargetFunction{*(new RateTargetDerivative{originTarget.derivative,originInput})}, 
                 originTarget{originTarget} ,originInput{originInput}{};
         ~RateTarget();

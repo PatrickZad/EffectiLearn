@@ -5,43 +5,89 @@ using namespace patrick;
 
 void Logistic::train(double* data, unsigned long width, long* lable, unsigned long length)
 {
-    //initialize weights, map and targets
-    std::map<unsigned long, std::vector<Vector>> lableDataMap;
-    std::vector<LogisticTarget> targets;
-    unsigned long i = 0;
-    for (; i < weights.size(); i++)
+    std::vector<Matrix> bMatrices{k-1};
+    //initialize bMatrices
+    for (unsigned long i = 0; i < k-1; i++)
     {
-        weights[i]=Vector{width+1,0.1};
-        lableDataMap[i]=std::vector<Vector>{};
-        targets.push_back(LogisticTarget{weights,i});
+        bMatrices[i]=Matrix{1,k-1};
+        bMatrices[i][0][i]=1;
     }
-    lableDataMap[i]=std::vector<Vector>{};
-    //build map
-    Vector expand{1,1};
-    for(i=0 ; i<length; i++)
+    //initialize weights
+    weights=Matrix{k-1,width,0.01};
+    //build training data
+    std::vector<Vector> datas;
+    std::vector<unsigned long> lables;
+    for (unsigned long i=0; i < length; i++)
     {
-        Vector dataVec{data+i*width,width};
-        lableDataMap[*(lable+i)].push_back(dataVec.concat(expand));
+        datas.push_back(Vector{data+width*i,width});
+        lables.push_back(*(lable+i));
     }
-    double previous=targets[0](weights[0]);
-    for (int t = 0;  t< 200; t++)
-    {
-        std::vector<Vector> newWeights;
-        for ( i = 0; i < targets.size(); i++)
-        {
-            newWeights.push_back(targets[i].RapidGradientDescent(weights[i]));
-        }
-        weights=newWeights;
-        double newValue=targets[0](weights[0]);
-        if (std::fabs(newValue-previous)<0.001)
-        {
-            break;
-        }
-        previous=newValue;
-    }
+    LogisticTarget target{bMatrices, datas, lables};
+    weights=target.GradientDescent(weights, 0.1);
 }
 
-long classify(double* dataRow,unsigned long width)
+long Logistic::classify(double* dataRow,unsigned long width)
 {
-    
+    unsigned long lable=k-1;
+    double value=1;
+    for (unsigned long i = 0; i < k-1; i++)
+    {
+        Vector weightVec{weights[i], width};
+        Vector dataVec{dataRow, width};
+        double newValue=std::exp(weightVec*dataVec);
+        if (newValue>value)
+        {
+            value=newValue;
+            lable=i;
+        }
+    }
+    return lable;
+}
+
+Matrix LogisticDerivative::operator()(Matrix& weights)
+{
+    Matrix result{weights.getLength,weights.getWidth};
+    for (unsigned long i = 0; i < datas.size(); i++)
+    {
+        Matrix part1{};
+        if (lables[i]!=weights.getLength())
+        {
+            part1=bMatrices[lables[i]].transposition()*Matrix{datas[i],VECTOR_ROW};
+        }
+        else
+        {
+            part1=Matrix{weights.getLength(),weights.getWidth()};
+        }
+        
+        Matrix numerator{weights.getLength(),weights.getWidth()};
+        double denominator=1;
+        for (unsigned long j = 0; j < weights.getLength(); j++)
+        {
+            double exp=std::exp(Vector{weights[j], weights.getWidth()}*datas[i]);
+            numerator+=bMatrices[j].transposition()*Matrix{datas[i],VECTOR_ROW}*exp;
+            denominator+=exp;
+        }
+        result+=(part1+numerator/denominator);
+    }
+    return result;
+}
+
+double LogisticTarget::operator()(Matrix& weights)
+{
+    double result=0;
+    for (unsigned long i = 0; i < datas.size(); i++)
+    {
+        double part1=0;
+        if (lables[i]!=weights.getLength())
+        {
+            part1=Vector{weights[lables[i]], weights.getWidth()}*datas[i];
+        }
+        double part2=1;
+        for (unsigned long j = 0; j < weights.getLength(); j++)
+        {
+            part2+=std::exp(Vector{weights[j], weights.getWidth()}*datas[i]);
+        }
+        result+=(part1-std::log(part2));
+    }
+    return result;
 }

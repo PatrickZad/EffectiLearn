@@ -1,7 +1,7 @@
 #include "optimizer.h"
 #include <cmath>
 using namespace patrick;
-
+/*
 template<class T>
 T TargetFunction<T>::RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200)
 {
@@ -9,7 +9,7 @@ T TargetFunction<T>::RapidGradientDescent(T& init, double minVariation=0.001,uns
     double previous=(*this)(minimumPoint);
     for (unsigned int i = 0; i < maxReapt; i++)
     {
-        RateTarget rateTarget{*this, minimumPoint};
+        RateTarget<T> rateTarget{*this, minimumPoint};
         double rate=rateTarget.searchRate();
         T newInput=minimum-derivative(minimumPoint)*rate;
         double newValue=*(this)(newInput);
@@ -22,26 +22,49 @@ T TargetFunction<T>::RapidGradientDescent(T& init, double minVariation=0.001,uns
     }
     return minimumPoint;
 }
-
-double RateTargetDerivative::operator()(double& rate)
+*/
+template<class T>
+T TargetFunction<T>::GradientDescent(T& init, double rate, double minVariation=0.001,unsigned int maxReapt=200)
 {
-    Vector originGradient=originDerivative(originInput);
-    Vector newInput=originInput-originGradient*rate;
+    T minimumPoint=init;
+    double previous=(*this)(minimumPoint);
+    for (unsigned int i = 0; i < maxReapt; i++)
+    {
+        T newInput=minimum-derivative(minimumPoint)*rate;
+        double newValue=*(this)(newInput);
+        if (std::fabs(newValue-previous)<minVariation)
+        {
+            break;
+        }
+        previous=newValue;
+        minimumPoint=newInput;
+    }
+    return minimumPoint;
+}
+
+template<class T>
+double RateTargetDerivative<T>::operator()(double& rate)
+{
+    T originGradient=originDerivative(originInput);
+    T newInput=originInput-originGradient*rate;
     return originDerivative(newInput)*(originGradient*(-1));
 }
 
-RateTarget::~RateTarget()
+template<class T>
+RateTarget<T>::~RateTarget()
 {
     delete &(this->derivative);
 }
 
-double RateTarget::operator()(double& input)
+template<class T>
+double RateTarget<T>::operator()(double& input)
 {
-    Vector newInput=originInput-originTarget.derivative(originInput)*input;
+    T newInput=originInput-originTarget.derivative(originInput)*input;
     return originTarget(newInput);
 }
 
-double RateTarget::searchRate(double minVariation, unsigned int maxReapt)
+template<class T>
+double RateTarget<T>::searchRate(double minVariation, unsigned int maxReapt)
 {
     double rateBeforeLast=minVariation*10;
     double rateLast=minVariation*20;
@@ -67,3 +90,4 @@ double RateTarget::searchRate(double minVariation, unsigned int maxReapt)
     }
     return rate;
 }
+ 

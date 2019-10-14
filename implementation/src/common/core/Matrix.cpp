@@ -138,6 +138,19 @@ double* Matrix::operator[](unsigned long index)const
     return start+index*width;
 }
 
+Matrix Matrix::transposition()
+{
+    Matrix result{width,length};
+    for (unsigned long i = 0; i < length; i++)
+    {
+        for (unsigned long j = 0; j < width; j++)
+        {
+            result[j][i]=(*this)[i][j];
+        }
+    }
+    return result;
+}
+
 inline double innerProduct(double* row, unsigned long width, double* column, unsigned long interval)
 {
     double sum=0;
@@ -212,6 +225,19 @@ Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
         for (unsigned long j = 0; j < result.getWidth(); j++)
         {
             result[i][j]=m1[i][j]-m2[i][j];
+        }
+    }
+    return result;
+}
+
+Matrix patrick::operator/(const Matrix& m, double num)
+{
+    Matrix result{m.getLength(),m.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=m[i][j]/num;
         }
     }
     return result;

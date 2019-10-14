@@ -4,40 +4,45 @@
 #include "common/core/common.h"
 #include "common/core/optimizer.h"
 #include "common/core/Vector.h"
+#include "common/core/Matrix.h"
 namespace patrick
 {
     class Logistic : Classifier
     {
     private:
-        std::vector<Vector> weights;
+        Matrix weights;
+        unsigned long k;
     public:
-        Logistic(unsigned long k) : weights{k-1}{};
+        Logistic(unsigned long k) : k{k}{};
         void train(double* data, unsigned long width, long* lable, unsigned long length);//lable belongs to {0,1,2,...,k-1}
         long classify(double* dataRow,unsigned long width);
     };
 
-    class LogisticDerivative : public FirstOrderDerivative<Vector>
+    class LogisticDerivative : public FirstOrderDerivative<Matrix>
     {
     private:
-        std::vector<Vector>& weights;
-        unsigned long weightIndex;
+        std::vector<Matrix>& bMatrices;
+        std::vector<Vector>& datas;
+        std::vector<unsigned long>& lables;
     public:
-        LogisticDerivative(std::vector<Vector>& weights, unsigned long index) 
-            : weights{weights}, weightIndex{index}{};
-        Vector operator()(Vector& input);
+        LogisticDerivative(std::vector<Matrix>& bMatrices, std::vector<Vector>& datas, 
+            std::vector<unsigned long>& lables) 
+                : bMatrices{bMatrices}, datas{datas}, lables{lables}{};
+        Matrix operator()(Matrix& weights);
     };
     
-    class LogisticTarget : public TargetFunction<Vector>
+    class LogisticTarget : public TargetFunction<Matrix>
     {
     private:
-        std::vector<Vector>& weights;
-        unsigned long weightIndex;
+        std::vector<Vector> datas;
+        std::vector<unsigned long> lables;
     public:
-        LogisticTarget(std::vector<Vector>& weights, unsigned long index) 
-            : TargetFunction{*(new LogisticDerivative{weights, index})}, 
-                weights{weights}, weightIndex{index}{};
+        LogisticTarget(std::vector<Matrix>& bMatrices, std::vector<Vector>& datas, 
+            std::vector<unsigned long>& lables) 
+            : TargetFunction{*(new LogisticDerivative{bMatrices, datas, lables})}, 
+                datas{datas}, lables{lables}{};
         ~LogisticTarget();
-        double operator()(Vector& input);
+        double operator()(Matrix& weights);
     };
     
 } // namespace patrick

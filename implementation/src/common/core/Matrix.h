@@ -12,6 +12,7 @@ namespace patrick
         unsigned long length=0;
         double* start=nullptr;
     public:
+        Matrix(){};
         Matrix(unsigned long  length, unsigned long width, double init=0);
         Matrix(Vector& vec, short shape=VECTOR_COLUMN);
         Matrix(const Matrix& m);
@@ -25,6 +26,7 @@ namespace patrick
         Matrix& operator+=(const Matrix& m);
         Matrix& operator-=(const Matrix& m);
         double* operator[](unsigned long index)const;
+        Matrix transposition();
     };
 
     Matrix operator*(const Matrix& m1, const Matrix& m2);
@@ -32,6 +34,7 @@ namespace patrick
     Matrix operator*(double num, const Matrix& m);
     Matrix operator+(const Matrix& m1, const Matrix& m2);
     Matrix operator-(const Matrix& m1, const Matrix& m2);
+    Matrix operator/(const Matrix& m, double num);
 } // namespace patrick
 
 #endif
