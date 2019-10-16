@@ -4,11 +4,11 @@ namespace patrick
 {
     class Vector
     {
-    private:
-        double* array=nullptr;
-        long length=0;
+    protected:
+        double* array;
+        long length;
     public:
-        Vector();
+        Vector() : array{nullptr}, length{0}{};
         Vector(double* row, unsigned long length);
         Vector(unsigned long length, double init=0);
         Vector(const Vector& vector);
@@ -24,11 +24,28 @@ namespace patrick
         long size()const;
         Vector& concat(const Vector& vec);
     };
+
     double operator*(const Vector& v1,const  Vector& v2);
     Vector operator*(const Vector& v,double num);
     Vector operator*(double num, const Vector& v);
     Vector operator+(const Vector& v1, const Vector& v2);
     Vector operator-(const Vector& v1, const Vector& v2);
+    
+    class LabledVector : public Vector
+    {
+    public:
+        long lable;
+    public:
+        LabledVector(double* row, unsigned long length, long lable) 
+            : Vector{row, length}, lable{lable}{};
+        LabledVector(const LabledVector& vector);
+        LabledVector(LabledVector&& vector);
+
+        LabledVector& operator=(const LabledVector& vector);
+        LabledVector& operator=(LabledVector&& vector);        
+    };
+
+    
 } // namespace patrick
 
 #endif

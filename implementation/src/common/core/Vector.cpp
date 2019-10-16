@@ -178,4 +178,42 @@ Vector patrick::operator-(const Vector& v1, const Vector& v2)
     return Vector{diff,v1.size()};
 }
 
+LabledVector::LabledVector(const LabledVector& vector)
+{
+    array=new double[vector.length];
+    for (long i = 0; i < vector.length; i++)
+    {
+        array[i]=(vector.array)[i];
+    }
+    this->length=vector.length;
+    this->lable=vector.lable;
+}
 
+LabledVector::LabledVector(LabledVector&& vector)
+{
+    this->array=vector.array;
+    this->length=vector.length;
+    vector.array=nullptr;
+    vector.length=0;
+}
+
+LabledVector& LabledVector::operator=(const LabledVector& vector)
+{
+    delete[] array;
+    array=new double[vector.length];
+    for (long i = 0; i < vector.length; i++)
+    {
+        array[i]=(vector.array)[i];
+    }
+    this->length=vector.length;
+    this->lable=vector.lable;
+}
+
+LabledVector& LabledVector::operator=(LabledVector&& vector)
+{
+    delete[] array;
+    this->array=vector.array;
+    this->length=vector.length;
+    vector.array=nullptr;
+    vector.length=0;
+}
