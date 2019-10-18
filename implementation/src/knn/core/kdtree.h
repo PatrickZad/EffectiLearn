@@ -1,7 +1,7 @@
 #ifndef CORE_KDTREE_H
 #define CORE_KDTREE_H
 #include <vector>
-#include "common/core/common.h"
+#include "common/core/dist_func.h"
 #include "common/core/Vector.h"
 namespace patrick{
     class KDTree

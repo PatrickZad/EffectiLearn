@@ -1,6 +1,5 @@
 #ifndef CORE_PERCEPTION_H
 #define CORE_PERCEPTION_H
-#include "common/core/common.h"
 #include "common/core/Vector.h"
 #include <vector>
 

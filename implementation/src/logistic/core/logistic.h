@@ -1,7 +1,7 @@
 #ifndef CORE_LOGISTIC_H
 #define CORE_LOGISTIC_H
 #include <vector>
-#include "common/core/common.h"
+#include "common/core/classifier.h"
 #include "common/core/optimizer.h"
 #include "common/core/Vector.h"
 #include "common/core/Matrix.h"

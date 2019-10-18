@@ -3,7 +3,7 @@
 #include <set>
 #include <map>
 #include <vector>
-#include "common/core/common.h"
+#include "common/core/classifier.h"
 #include "attr_select.h" 
 namespace patrick
 {

@@ -1,6 +1,5 @@
 #ifndef CORE_COMMON_OPTIMIZER_H
 #define CORE_COMMON_OPTIMIZER_H
-#include "common.h"
 #include "Vector.h"
 #include <vector>
 namespace patrick

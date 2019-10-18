@@ -1,6 +1,7 @@
 #ifndef CORE_KNN_H
 #define CORE_KNN_H
-#include "common/core/common.h"
+#include "common/core/dist_func.h"
+#include "common/core/classifier.h"
 #include "kdtree.h"
 namespace patrick{
     class Knn:Classifier

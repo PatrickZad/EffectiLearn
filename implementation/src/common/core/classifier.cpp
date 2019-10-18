@@ -1,5 +1,4 @@
-#include "common.h"
-#include <initializer_list>
+#include "classifier.h"
 #include "exception/exception.h"
 using namespace patrick;
 
