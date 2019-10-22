@@ -2,6 +2,7 @@
 #define CORE_BAYES_H
 #include <map>
 #include <vector>
+#include "common/core/classifier.h"
 namespace patrick{
     class NaiveBayes:Classifier
     {
