@@ -1,5 +1,5 @@
 #include "classifier.h"
-#include "exception/exception.h"
+#include "./../../exception/exception.h"
 using namespace patrick;
 
 double Classifier::test(double* data, unsigned long width, long* lable, unsigned long length)

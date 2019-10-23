@@ -1,6 +1,6 @@
 #include "bayes.h"
-#include "common/core/common.h"
 #include <set>
+#include "./../../common/core/Vector.h"
 using namespace patrick;
 
 void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned long length)
@@ -38,7 +38,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
     {
         std::set<double>::iterator iter;
         unsigned long index=0;
-        for (iter = attrSets[i].begin(); iter != attrSets[i].end; iter++)
+        for (iter = attrSets[i].begin(); iter != attrSets[i].end(); iter++)
         {
             conAttrMaps[i][*iter]=index;
             index++;
@@ -51,7 +51,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
         std::vector<std::vector<double>> conMatrix{lableIndexMap.size()};
         for (unsigned long j = 0; j < lableIndexMap.size(); j++)
         {
-            conMatrix[j]=std::vector<double> (attrSets[i].size,0);
+            conMatrix[j]=std::vector<double> (attrSets[i].size(),0);
         }
         conMatrices.push_back(conMatrix);
     }

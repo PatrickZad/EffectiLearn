@@ -1,5 +1,5 @@
 #include "Vector.h"
-#include "exception/exception.h"
+#include "./../../exception/exception.h"
 using namespace patrick;
 Vector::Vector(double* row, unsigned long length)
 {
@@ -53,6 +53,7 @@ Vector& Vector::operator=(const Vector& vector)
         array[i]=(vector.array)[i];
     }
     this->length=vector.length;
+    return *this;
 }
 Vector& Vector::operator=(Vector&& vector)
 {
@@ -61,6 +62,7 @@ Vector& Vector::operator=(Vector&& vector)
     this->length=vector.length;
     vector.array=nullptr;
     vector.length=0;
+    return *this;
 }
 
 Vector& Vector::operator+=(const Vector& vector)
@@ -99,7 +101,7 @@ double& Vector::operator[](unsigned long index)const
 }
 
 
-long Vector::size()const
+unsigned long Vector::size()const
 {
     return length;
 }
@@ -140,7 +142,7 @@ double patrick::operator*(const Vector& v1, const Vector& v2)
 Vector patrick::operator*(const Vector& v, double num)
 {
     double sum[v.size()];
-    for (long i = 0; i < v.size(); i++){
+    for (unsigned long i = 0; i < v.size(); i++){
         sum[i]=v[i]*num;
     }    
     return Vector{sum,v.size()};
@@ -158,7 +160,7 @@ Vector patrick::operator+(const Vector& v1, const Vector& v2)
         throw CalculationInvalidException{};
     }
     double sum[v1.size()];
-    for (long i = 0; i < v1.size(); i++){
+    for (unsigned long i = 0; i < v1.size(); i++){
         sum[i]=v1[i]+v2[i];
     }    
     return Vector{sum,v1.size()};
@@ -172,7 +174,7 @@ Vector patrick::operator-(const Vector& v1, const Vector& v2)
         throw CalculationInvalidException{};
     }
     double diff[v1.size()];
-    for (long i = 0; i < v1.size(); i++){
+    for (unsigned long i = 0; i < v1.size(); i++){
         diff[i]=v1[i]-v2[i];
     }    
     return Vector{diff,v1.size()};
@@ -207,6 +209,7 @@ LabledVector& LabledVector::operator=(const LabledVector& vector)
     }
     this->length=vector.length;
     this->lable=vector.lable;
+    return *this;
 }
 
 LabledVector& LabledVector::operator=(LabledVector&& vector)
@@ -216,4 +219,5 @@ LabledVector& LabledVector::operator=(LabledVector&& vector)
     this->length=vector.length;
     vector.array=nullptr;
     vector.length=0;
+    return *this;
 }
