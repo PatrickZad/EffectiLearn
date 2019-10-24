@@ -2,7 +2,7 @@
 #define CORE_BAYES_H
 #include <map>
 #include <vector>
-#include "common/core/classifier.h"
+#include "./../../common/core/classifier.h"
 namespace patrick{
     class NaiveBayes:Classifier
     {
@@ -12,7 +12,6 @@ namespace patrick{
         std::map<long, unsigned long> lableIndexMap;//lable-maxtrix_index sets
         std::map<long,double> lableProbMap;
     public:
-        NaiveBayes();
         void train(double* data, unsigned long width, long* lable, unsigned long length);
         long classify(double* dataRow,unsigned long width);
         //double test(double* data, unsigned long width, long* lable, unsigned long length);

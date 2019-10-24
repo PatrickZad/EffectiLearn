@@ -6,7 +6,7 @@ namespace patrick
     {
     protected:
         double* array;
-        long length;
+        unsigned long length;
     public:
         Vector() : array{nullptr}, length{0}{};
         Vector(double* row, unsigned long length);
@@ -21,7 +21,7 @@ namespace patrick
         Vector& operator-=(const Vector& vector);
         double& operator[](unsigned long index)const;
         
-        long size()const;
+        unsigned long size()const;
         Vector& concat(const Vector& vec);
     };
 

@@ -1,0 +1,28 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "bayes_test_build",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/implementation/src/bayes/core/bayes.cpp",
+                "${workspaceFolder}/implementation/test/core_test/bayes_test.cpp",
+                "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "-o",
+                "${workspaceFolder}/implementation/test/core_test/out/bayes.out"   
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ]
+}

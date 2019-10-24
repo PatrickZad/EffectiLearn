@@ -1,9 +1,9 @@
-#include"bayes/core/bayes.h"
-#include<string>
-#include<fstream>
-#include<vector>
-#include<sstream>
-#include<cmath>
+#include "./../../src/bayes/core/bayes.h"
+#include <string>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <cmath>
 std::vector<std::string> split(std::string& str, char c);
 double str2float(std::string& str);
 int main(){
@@ -44,8 +44,9 @@ int main(){
             continue;
         }
     }
-    patrick::NaiveBayes bayes;
+    patrick::NaiveBayes bayes{};
     bayes.train(data, width, lable, length);
+    return 0;
 }
 
 std::vector<std::string> split(std::string& str, char c)
@@ -58,6 +59,7 @@ std::vector<std::string> split(std::string& str, char c)
     {
         result.push_back(substr);
     }
+    return result;
 }
 double str2float(std::string& str)
 {
