@@ -9,7 +9,7 @@ namespace patrick
         virtual double operator()(Vector& vec0, Vector& vec1)=0;
     };
 
-    class MinkowskiDist : DistanceFunc
+    class MinkowskiDist : public DistanceFunc
     {
     protected:
         unsigned long pow;
