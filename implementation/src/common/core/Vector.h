@@ -30,6 +30,7 @@ namespace patrick
     Vector operator*(double num, const Vector& v);
     Vector operator+(const Vector& v1, const Vector& v2);
     Vector operator-(const Vector& v1, const Vector& v2);
+    bool operator==(const Vector& v1, const Vector& v2);
     
     class LabledVector : public Vector
     {

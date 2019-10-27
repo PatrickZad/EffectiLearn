@@ -180,6 +180,22 @@ Vector patrick::operator-(const Vector& v1, const Vector& v2)
     return Vector{diff,v1.size()};
 }
 
+bool patrick::operator==(const Vector& v1, const Vector& v2)
+{
+    if (v1.size() != v2.size())
+    {
+        throw CalculationInvalidException{};
+    }
+    for (unsigned long i = 0; i < v1.size(); i++)
+    {
+        if (v1[i] != v2[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 LabledVector::LabledVector(const LabledVector& vector)
 {
     array=new double[vector.length];

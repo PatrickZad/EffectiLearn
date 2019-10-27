@@ -12,6 +12,7 @@ namespace patrick
     public:
         Cluster(unsigned long k) : k{k}, clusters{k} {};
         virtual void cluster(double *data, unsigned long width, unsigned long length)=0;
+        std::vector<std::vector<Vector>> getClusters(){return clusters;};
     };
     
 } // namespace patrick
