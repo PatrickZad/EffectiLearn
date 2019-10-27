@@ -1,6 +1,14 @@
 #include "Matrix.h"
 #include "exception/exception.h"
 using namespace patrick;
+Matrix::Matrix(unsigned long squareWidth) 
+    : width{squareWidth}, length {squareWidth}, start{new double[squareWidth*squareWidth]}
+{
+    for (unsigned long i = 0; i < squareWidth; i++)
+    {
+        *(start+squareWidth*i+i)=1;
+    }
+}
 
 Matrix::Matrix(unsigned long  length, unsigned long width, double init)
     :width{width}, length{length}, start{new double[width*length]}
