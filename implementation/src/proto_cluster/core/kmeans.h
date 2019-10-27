@@ -8,7 +8,7 @@ namespace patrick
     private:
         /* data */
     public:
-        KMeans(/* args */);
+        KMeans(unsigned long k) : Cluster{k} {};
     };
     
 } // namespace patrick
