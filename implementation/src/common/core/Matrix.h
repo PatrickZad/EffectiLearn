@@ -30,6 +30,7 @@ namespace patrick
         Matrix transposition();
         Matrix inverse();
         double det();
+        Matrix adjugate();
     };
 
     Matrix operator*(const Matrix& m1, const Matrix& m2);

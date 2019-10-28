@@ -1,8 +1,11 @@
-#include "Matrix.h"
 #include "exception/exception.h"
+#include "Matrix.h"
+#include "util.h"
+#include <cmath>
 using namespace patrick;
-Matrix::Matrix(unsigned long squareWidth) 
-    : width{squareWidth}, length {squareWidth}, start{new double[squareWidth*squareWidth]}
+
+Matrix::Matrix(unsigned long squareWidth)
+    :width{squareWidth}, length{squareWidth}, start{new double[squareWidth*squareWidth]}
 {
     for (unsigned long i = 0; i < squareWidth; i++)
     {
@@ -167,6 +170,87 @@ inline double innerProduct(double* row, unsigned long width, double* column, uns
         sum+=(*(row+i)) * (*(column+i*interval));
     }
     return sum;
+}
+
+Matrix Matrix::inverse()
+{
+    if ((width!=length) || (this->det()==0))
+    {
+        throw CalculationInvalidException{};
+    }
+    return this->adjugate()*(1/this->det());
+}
+
+double Matrix::det()
+{
+    if (width!=length)
+    {
+        throw CalculationInvalidException{};
+    }
+    
+    std::vector<unsigned long> columns;
+    for (unsigned long i = 0; i < width; i++)
+    {
+        columns.push_back(i);
+    }
+    std::vector<std::vector<unsigned long>> permutations=allPermutation<unsigned long>(columns);
+    std::vector<std::vector<unsigned long>>::iterator iter=permutations.begin();
+    double result=0;
+    for (; iter!=permutations.end(); iter++)
+    {
+        double product=std::pow(-1, inversionNum<unsigned long>(*iter));
+        for (unsigned long i = 0; i < iter->size(); i++)
+        {
+            product*=(*this)[i][(*iter)[i]];
+        }
+        result+=product;
+    }
+    return result;
+}
+
+Matrix Matrix::adjugate()
+{
+    if ((width!=length) || (this->det()==0))
+    {
+        throw CalculationInvalidException{};
+    }   
+    Matrix adjugate{width, length};
+    for (unsigned long i = 0; i < length; i++)
+    {
+        for (unsigned long j = 0; j < width; j++)
+        {
+            adjugate[i][j]=subMatrix(*this, i, j).det();
+        }
+    }
+    return adjugate;
+}
+
+inline Matrix subMatrix(Matrix& origin, unsigned long row, unsigned long column)
+{
+    Matrix sub{origin.getLength()-1, origin.getWidth()-1};
+    for (unsigned long r = 0; r < row; r++)
+    {
+        for (unsigned long c = 0; c < column; c++)
+        {
+            sub[r][c]=origin[r][c];
+        }
+        for (unsigned long c = column+1; c < origin.getWidth(); c++)
+        {
+            sub[r][c-1]=origin[r][c];
+        }
+    }
+    for (unsigned long r = row+1; r < origin.getLength(); r++)
+    {
+        for (unsigned long c = 0; c < column; c++)
+        {
+            sub[r-1][c]=origin[r][c];
+        }
+        for (unsigned long c = column+1; c < origin.getWidth(); c++)
+        {
+            sub[r-1][c-1]=origin[r][c];
+        }
+    }
+    return sub;
 }
 
 Matrix patrick::operator*(const Matrix& m1, const Matrix& m2)
