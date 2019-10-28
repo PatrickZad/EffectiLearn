@@ -17,8 +17,8 @@ namespace patrick
         unsigned long dim;
         Matrix sigma;
         Matrix mu;
-        double det;
         Matrix inverse;
+        double denominator;
     public:
         Gaussian(unsigned long dim, Matrix& sigma, Vector& mu);
         double probability(Vector& sample);
