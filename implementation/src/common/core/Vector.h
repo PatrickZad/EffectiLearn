@@ -1,5 +1,6 @@
 #ifndef COMMON_CORE_VECTOR_H
 #define COMMON_CORE_VECTOR_H
+#include <vector>
 namespace patrick
 {
     class Vector
@@ -9,6 +10,7 @@ namespace patrick
         unsigned long length;
     public:
         Vector() : array{nullptr}, length{0}{};
+        Vector(std::vector<double> stdvec);
         Vector(double* row, unsigned long length);
         Vector(unsigned long length, double init=0);
         Vector(const Vector& vector);

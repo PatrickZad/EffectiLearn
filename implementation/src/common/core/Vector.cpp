@@ -1,6 +1,14 @@
 #include "Vector.h"
 #include "./../../exception/exception.h"
 using namespace patrick;
+Vector::Vector(std::vector<double> stdvec)
+    :array{new double[stdvec.size()]}, length{stdvec.size()}
+{
+    for (unsigned long i = 0; i < length; i++)
+    {
+        *(array+i)=stdvec[i];   
+    }
+}
 Vector::Vector(double* row, unsigned long length)
 {
     array=new double[length];

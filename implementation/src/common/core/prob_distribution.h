@@ -22,6 +22,11 @@ namespace patrick
     public:
         Gaussian(unsigned long dim, Matrix& sigma, Vector& mu);
         double probability(Vector& sample);
+        
+        void setSigma(Matrix& sigma);
+        Matrix getSigma();
+        void setMu(Vector& mu);
+        Vector getMu();
     };
     
 } // namespace patrick

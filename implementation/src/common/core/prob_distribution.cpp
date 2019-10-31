@@ -17,3 +17,29 @@ double Gaussian::probability(Vector& sample)
     Matrix pow=-0.5*diff.transposition()*inverse*diff;
     return std::exp(pow[0][0])/denominator;
 }
+
+void Gaussian::setSigma(Matrix& sigma)
+{
+    this->sigma=sigma;
+    double sqrtDet=std::sqrt(sigma.det());
+    denominator=std::pow(2*PI, dim/2.0)*sqrtDet;
+    inverse=sigma.inverse();
+}
+Matrix Gaussian::getSigma()
+{
+    Matrix result{this->sigma};
+    return result;
+}
+void Gaussian::setMu(Vector& mu)
+{
+    this->mu=Matrix{mu};
+}
+Vector Gaussian::getMu()
+{
+    Vector result{mu.getLength()};
+    for (unsigned long i = 0; i < mu.getLength(); i++)
+    {
+        result[i]=mu[i][0];
+    }
+    return result;
+}
