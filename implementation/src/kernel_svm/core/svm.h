@@ -5,7 +5,7 @@
 #include "./../../common/core/Vector.h"
 #include <vector>
 namespace patrick
-{
+{     
     class SVM : Classifier
     {
     private:
@@ -14,10 +14,17 @@ namespace patrick
         double b;
         std::vector<LabledVector> datas;
         std::vector<double> alphas;
+        unsigned int maxRepeat=200;
     public:
         SVM(double c, KernelFunction& kernel) : c{c}, kernel{kernel} {};
         void train(double* data, unsigned long width, long* lable, unsigned long length);
         long classify(double* dataRow,unsigned long width);
+    private:
+        unsigned long selectFirstAlpha();
+        unsigned long selectSecondAlpha();
+        double originOutput(Vector& data);
+        bool earlyStop();
+        double bias(unsigned long index);
     };
     
 } // namespace patrick
