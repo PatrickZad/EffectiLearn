@@ -30,7 +30,7 @@ void SVM::train(double* data, unsigned long width, long* lable, unsigned long le
             datas[secondIndex])-2*kernel(datas[firstIndex], datas[secondIndex]);
         double newUncutSecond=alphas[secondIndex]+datas[secondIndex].lable
             *(bias(firstIndex)-bias(secondIndex))/eta;
-        //update varibles
+        //update alphas
         double secondOld=alphas[secondIndex];
         if (newUncutSecond>right)
         {
@@ -44,6 +44,12 @@ void SVM::train(double* data, unsigned long width, long* lable, unsigned long le
         }
         alphas[firstIndex]=alphas[firstIndex]+datas[firstIndex].lable * datas[secondIndex].lable
             *(secondOld-alphas[secondIndex]);
+        //update b
+        if (alphas[firstIndex]>0 && alphas[firstIndex]<c)
+        {
+            b=
+        }
+        
         //check if ready to stop
         if (earlyStop())
         {
@@ -64,6 +70,22 @@ double SVM::originOutput(Vector& data)
     for (unsigned long i = 0; i < datas.size(); i++)
     {
         result+=alphas[i]*datas[i].lable*kernel(data, datas[i]);
+    }
+    return result;
+}
+
+unsigned long SVM::selectFirstAlpha()
+{}
+unsigned long SVM::selectSecondAlpha()
+{}
+bool SVM::earlyStop()
+{}
+double SVM::bias(unsigned long index)
+{
+    double result=b-datas[index].lable;
+    for (unsigned long i = 0; i < datas.size(); i++)
+    {
+        result+=alphas[i]*datas[i].lable*kernel(datas[i],datas[index]);
     }
     return result;
 }
