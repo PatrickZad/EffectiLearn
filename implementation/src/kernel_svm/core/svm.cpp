@@ -14,7 +14,7 @@ void SVM::train(double* data, unsigned long width, long* lable, unsigned long le
     {
         //select variables
         unsigned long firstIndex=selectFirstAlpha();
-        unsigned long secondIndex=selectSecondAlpha();
+        unsigned long secondIndex=selectSecondAlpha(firstIndex);
         //calculate new values
         double left,right;
         if (datas[firstIndex].lable==datas[secondIndex].lable)
@@ -47,9 +47,14 @@ void SVM::train(double* data, unsigned long width, long* lable, unsigned long le
         //update b
         if (alphas[firstIndex]>0 && alphas[firstIndex]<c)
         {
-            b=
+            b-=bias(firstIndex);
+        }else if (alphas[secondIndex]>0 && alphas[secondIndex]<c)
+        {
+            b-=bias(secondIndex);
+        }else
+        {
+            b=(b-bias(firstIndex)+b-bias(secondIndex))/2;
         }
-        
         //check if ready to stop
         if (earlyStop())
         {
@@ -75,11 +80,92 @@ double SVM::originOutput(Vector& data)
 }
 
 unsigned long SVM::selectFirstAlpha()
-{}
-unsigned long SVM::selectSecondAlpha()
-{}
+{
+    unsigned long resultIndex=alphas.size();
+    double absBias=0;
+    unsigned long outIterIndex=alphas.size();
+    double absBiasOutIter=0;
+    for (unsigned long i = 0; i < alphas.size(); i++)
+    {
+        double bias=datas[i].lable * originOutput(datas[i])-1;
+        double abs=std::abs(bias);
+        if (alphas[i]>0 && alphas[i]<c)
+        {
+            if (abs>minChange && abs>absBias)
+            {
+                resultIndex=i;
+                absBias=abs;
+            }
+            break;
+        }
+        if (alphas[i]==0)
+        {
+            if (bias<(-1*minChange) && abs>absBiasOutIter)
+            {
+                outIterIndex=i;
+                absBiasOutIter=abs;
+            }
+            break;
+        }
+        if (bias>minChange && abs>absBiasOutIter)
+        {
+            outIterIndex=i;
+            absBiasOutIter=abs;
+        }
+    }
+    if (resultIndex<alphas.size())
+    {
+        return resultIndex;
+    }else
+    if (outIterIndex<alphas.size())
+    {
+        return outIterIndex;
+    }
+    return 0;
+    
+}
+unsigned long SVM::selectSecondAlpha(unsigned long firstIndex)
+{
+    unsigned long resultIndex=alphas.size();
+    double absBias=0;
+    for (unsigned long i = 0; i < firstIndex; i++)
+    {
+        double abs=std::abs(bias(firstIndex)-bias(i));
+        if (abs>absBias)
+        {
+            resultIndex=i;
+            absBias=abs;
+        }
+    }
+    for (unsigned long i = firstIndex+1; i < alphas.size(); i++)
+    {
+        double abs=std::abs(bias(firstIndex)-bias(i));
+        if (abs>absBias)
+        {
+            resultIndex=i;
+            absBias=abs;
+        }
+    }
+    return resultIndex;
+}
 bool SVM::earlyStop()
-{}
+{
+    //check KKT
+    double sum=0;
+    for (unsigned long i = 0; i < alphas.size(); i++)
+    {
+        sum+=alphas[i]*datas[i].lable;
+        if (!checkKKT(i))
+        {
+            return false;
+        }
+    }
+    if (std::abs(sum)>minChange)
+    {
+        return false;
+    }
+    return true;
+}
 double SVM::bias(unsigned long index)
 {
     double result=b-datas[index].lable;
@@ -88,4 +174,27 @@ double SVM::bias(unsigned long index)
         result+=alphas[i]*datas[i].lable*kernel(datas[i],datas[index]);
     }
     return result;
+}
+/*
+*accuracy check not implemented
+*/
+bool SVM::checkKKT(unsigned long index)
+{
+    if (alphas[index]<0 || alphas[index]>c)
+    {
+        return false;
+    }else
+    if (alphas[index]==0 && originOutput(datas[index])*datas[index].lable<1)
+    {
+        return false;
+    }else
+    if (alphas[index]==c && originOutput(datas[index])*datas[index].lable>1)
+    {
+        return false;
+    }else
+    if (originOutput(datas[index])*datas[index].lable!=1)
+    {
+        return false;
+    }
+    return true;
 }

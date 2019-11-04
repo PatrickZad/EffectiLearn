@@ -15,16 +15,18 @@ namespace patrick
         std::vector<LabledVector> datas;
         std::vector<double> alphas;
         unsigned int maxRepeat=200;
+        double minChange=0.01;
     public:
         SVM(double c, KernelFunction& kernel) : c{c}, kernel{kernel} {};
         void train(double* data, unsigned long width, long* lable, unsigned long length);
         long classify(double* dataRow,unsigned long width);
     private:
-        unsigned long selectFirstAlpha();
-        unsigned long selectSecondAlpha();
         double originOutput(Vector& data);
+        unsigned long selectFirstAlpha();
+        unsigned long selectSecondAlpha(unsigned long firstIndex);
         bool earlyStop();
         double bias(unsigned long index);
+        bool checkKKT(unsigned long index);
     };
     
 } // namespace patrick
