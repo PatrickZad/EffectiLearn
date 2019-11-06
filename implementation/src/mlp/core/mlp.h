@@ -14,6 +14,8 @@ namespace patrick
         MLP(unsigned long depth, unsigned long * widths, ActivationFunc* activations=nullptr);
         void train(double* data, unsigned long width, long* lable, unsigned long length);
         long classify(double* dataRow,unsigned long width);
+    private:
+        Vector originOutput();
     };
     
 } // namespace patrick

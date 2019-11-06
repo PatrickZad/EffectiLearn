@@ -1,4 +1,0 @@
-#ifndef CORE_NEURAL_NETWORK_H
-#define CORE_NEURAL_NETWORK_H
-
-#endif

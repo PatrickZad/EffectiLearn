@@ -7,27 +7,32 @@ namespace patrick
     {
     //linear as default
     public:
-        double operator()(Vector& input);
+        virtual Vector operator()(Vector& input)=0;
+    };
+    class Linear : public ActivationFunc
+    {
+    public:
+        Vector operator()(Vector& input);
     };
     class Sigmoid : public ActivationFunc
     {
     public:
-        double operator()(Vector& input);
+        Vector operator()(Vector& input);
     };
     class Softmax : public ActivationFunc
     {
     public:
-        double operator()(Vector& input);
+        Vector operator()(Vector& input);
     };
     class ReLU : public ActivationFunc
     {
     public:
-        double operator()(Vector& input);
+        Vector operator()(Vector& input);
     };
     class TanH : public ActivationFunc
     {
     public:
-        double operator()(Vector& input);
+        Vector operator()(Vector& input);
     };
 } // namespace patrick
 
