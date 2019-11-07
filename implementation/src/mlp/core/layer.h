@@ -8,11 +8,12 @@ namespace patrick
     class Layer
     {
     private:
-        Matrix weights;//include weights and bias
-        ActivationFunc activation;
+        Matrix weightsTrans;//include weights and bias, weights of a neuron is a row vector
+        Matrix weights;
+        ActivationFunc& activation;
         unsigned long width;
     public:
-        Layer(ActivationFunc& activation, unsigned long width);
+        Layer(ActivationFunc& activation, unsigned long width, unsigned long dataLength);
         Vector output(Vector& input);
         Matrix derivative(Vector& input);
     private:

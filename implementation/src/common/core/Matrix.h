@@ -1,6 +1,7 @@
 #ifndef COMMON_CORE_MATRIX_H
 #define COMMON_CORE_MATRIX_H
 #include "Vector.h"
+#include <vector>
 namespace patrick
 {
     static const short VECTOR_ROW=0;
@@ -31,6 +32,8 @@ namespace patrick
         Matrix inverse();
         double det();
         Matrix adjugate();
+        std::vector<Vector> getRows();
+        std::vector<Vector> getColumns();
     };
 
     Matrix operator*(const Matrix& m1, const Matrix& m2);

@@ -253,6 +253,30 @@ inline Matrix subMatrix(Matrix& origin, unsigned long row, unsigned long column)
     return sub;
 }
 
+std::vector<Vector> Matrix::getRows()
+{
+    std::vector<Vector> result;
+    for (unsigned long i = 0; i < length; i++)
+    {
+        result.push_back(Vector{start+i*width, width});
+    }
+    return result;
+}
+std::vector<Vector> Matrix::getColumns()
+{
+    std::vector<Vector> result;
+    for (unsigned long i = 0; i < width; i++)
+    {
+        Vector column{length};
+        for (unsigned long j = 0; j < length; j++)
+        {
+            result[j]=(*this)[j][i];
+        }
+        result.push_back(column);
+    }
+    return result;
+}
+
 Matrix patrick::operator*(const Matrix& m1, const Matrix& m2)
 {
     if (m1.getWidth()!=m2.getLength())
