@@ -15,9 +15,10 @@ namespace patrick
     class CrossEntropy : CostFunc
     {
     public:
-        double cost(std::vector<LabledVector> datas, MLP& model);
-        Vector derivative(Vector& output);
+        double cost(std::vector<LabledVector> datas, std::vector<Vector> outputs);
+        Vector derivative(std::vector<LabledVector> datas, std::vector<Vector> outputs);
     };
+    /*
     class Regularizer
     {
     public:
@@ -25,9 +26,12 @@ namespace patrick
     };
     class L2Regularizer : Regularizer
     {
+    private:
+        double rate;
     public:
+        L2Regularizer(double rate) : rate{rate}{};
         double operator()(Matrix& weights);
-    };
+    };*/
 } // namespace patrick
 
 #endif
