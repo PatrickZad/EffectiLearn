@@ -131,6 +131,19 @@ Vector& Vector::concat(const Vector& vec)
     return *this;
 }
 
+void Vector::append(double value)
+{
+    double* start=new double[length+1];
+    for (unsigned long i = 0; i < length; i++)
+    {
+        *(start+i)=array[i];
+    }
+    *(start+length)=value;
+    delete array;
+    array=start;
+    length++;
+}
+
 //operator reload
 
 double patrick::operator*(const Vector& v1, const Vector& v2)

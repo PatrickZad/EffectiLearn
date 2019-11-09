@@ -25,6 +25,7 @@ namespace patrick
         
         unsigned long size()const;
         Vector& concat(const Vector& vec);
+        void append(double value);
     };
 
     double operator*(const Vector& v1,const  Vector& v2);

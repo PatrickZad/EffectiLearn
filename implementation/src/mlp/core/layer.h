@@ -15,7 +15,10 @@ namespace patrick
     public:
         Layer(ActivationFunc& activation, unsigned long width, unsigned long dataLength);
         Vector output(Vector& input);
-        Matrix derivative(Vector& input);
+        Matrix derivativeInput(Vector& input);
+        Matrix derivativeParemeter(Vector& input);
+        void updateWeights(Matrix& newWeights);
+        const Matrix& getWeights();
     private:
         void initParemeters();
     };
