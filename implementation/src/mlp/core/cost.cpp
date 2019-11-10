@@ -11,6 +11,11 @@ double CrossEntropy::cost(std::vector<LabledVector> datas, std::vector<Vector> o
     return result;
 }
 
+double CrossEntropy::cost(LabledVector& input, Vector& output)
+{
+    return -1*std::log(output[input.lable]);
+}
+
 Vector CrossEntropy::derivative(std::vector<LabledVector> datas, std::vector<Vector> outputs)
 {
     Vector result{outputs[0].size()};

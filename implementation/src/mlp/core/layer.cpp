@@ -10,9 +10,7 @@ Layer::Layer(ActivationFunc& activation, unsigned long width, unsigned long data
 
 Vector Layer::output(Vector& input)
 {
-    Vector bias{1};
-    bias[0]=-1;
-    Vector product=(weightsTrans*Matrix{input.concat(bias)}).getColumns()[0];
+    Vector product=(weightsTrans*Matrix{input}).getColumns()[0];
     return activation(product);
 }
 

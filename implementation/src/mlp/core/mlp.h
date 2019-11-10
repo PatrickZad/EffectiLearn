@@ -12,6 +12,9 @@ namespace patrick
     private:
         std::vector<Layer> network;
         CostFunc& cost;
+        int maxRepeat=200;
+        double minChange=0.001;
+        double rate=0.1;
     public:
         MLP(unsigned long dataWidth, unsigned long depth, unsigned long * widths, ActivationFunc* activations, CostFunc& cost);
         MLP(std::vector<Layer> layers, CostFunc& cost) : network{layers}, cost{cost} {};
