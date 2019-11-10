@@ -1,6 +1,11 @@
 #include "cost.h"
 #include <cmath>
 using namespace patrick;
+double CrossEntropy::cost(LabledVector& input, Vector& output)
+{
+    return -1*std::log(output[input.lable]);
+}
+
 double CrossEntropy::cost(std::vector<LabledVector> datas, std::vector<Vector> outputs)
 {
     double result=0;
