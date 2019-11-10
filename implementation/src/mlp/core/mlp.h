@@ -3,18 +3,20 @@
 #include "activation.h"
 #include "layer.h"
 #include <vector>
-#include "./../../common/core/classifier.h"
+#include "cost.h"
+#include "layer.h"
 namespace patrick
 {
-    class MLP : public Classifier
+    class MLP 
     {
     private:
         std::vector<Layer> network;
+        CostFunc& cost;
     public:
-        MLP(unsigned long depth, unsigned long * widths, ActivationFunc* activations=nullptr);
+        MLP(unsigned long dataWidth, unsigned long depth, unsigned long * widths, ActivationFunc* activations, CostFunc& cost);
+        MLP(std::vector<Layer> layers, CostFunc& cost) : network{layers}, cost{cost} {};
         void train(double* data, unsigned long width, long* lable, unsigned long length);
-        long classify(double* dataRow,unsigned long width);
-        Vector originOutput();
+        Vector output(double* data, unsigned long width);
     };
     
 } // namespace patrick

@@ -12,7 +12,7 @@ namespace patrick
         virtual double cost(Vector& output)=0;
         virtual Vector derivative(Vector& output)=0;
     };
-    class CrossEntropy : CostFunc
+    class CrossEntropy : public CostFunc
     {
     public:
         double cost(std::vector<LabledVector> datas, std::vector<Vector> outputs);
