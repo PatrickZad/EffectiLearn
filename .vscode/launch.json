@@ -8,7 +8,26 @@
             "name": "bayes_test_debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/test/core_test/out/bayes.out",
+            "program": "${workspaceFolder}/implementation//test/core_test/out/bayes.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "perceptron_test_debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/implementation/test/core_test/out/perceptron.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

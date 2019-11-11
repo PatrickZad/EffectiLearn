@@ -3,10 +3,10 @@
 #include "./../../common/core/Vector.h"
 using namespace patrick;
 
-void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned long length)
+void NaiveBayes::train(double* data, unsigned long width,unsigned long* lable, unsigned long length)
 {
     //build lable map
-    std::map<long,unsigned long> lableAmountMap;
+    std::map<unsigned long,unsigned long> lableAmountMap;
     unsigned long index=0;
     for (unsigned long i = 0; i < length; i++)
     {
@@ -66,7 +66,7 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
         }
     }
     //build lable probability map
-    std::map<long,unsigned long>::iterator mapIter=lableAmountMap.begin();
+    std::map<unsigned long,unsigned long>::iterator mapIter=lableAmountMap.begin();
     for (; mapIter != lableAmountMap.end(); mapIter++)
     {
         lableProbMap[mapIter->second]=(double)lableAmountMap[mapIter->second]/length;
@@ -88,11 +88,11 @@ void NaiveBayes::train(double* data, unsigned long width, long* lable, unsigned 
     }
 }
 
-long NaiveBayes::classify(double* dataRow,unsigned long width)
+unsigned long NaiveBayes::classify(double* dataRow,unsigned long width)
 {
-    long lable=0;
+    unsigned long lable=0;
     double prob=0;
-    std::map<long,double>::iterator iter=lableProbMap.begin();
+    std::map<unsigned long,double>::iterator iter=lableProbMap.begin();
     for ( ; iter != lableProbMap.end(); iter++)
     {
         double product=iter->second;

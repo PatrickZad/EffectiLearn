@@ -5,6 +5,28 @@
     "tasks": [
         {
             "type": "shell",
+            "label": "perceptron_test_build",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/implementation/src/perceptron/core/perceptron.cpp",
+                "${workspaceFolder}/implementation/test/core_test/perceptron_test.cpp",
+                "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "${workspaceFolder}/implementation/test/core_test/common.cpp",
+                "-o",
+                "${workspaceFolder}/implementation/test/core_test/out/perceptron.out"   
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
             "label": "bayes_test_build",
             "command": "g++",
             "args": [
@@ -13,6 +35,7 @@
                 "${workspaceFolder}/implementation/test/core_test/bayes_test.cpp",
                 "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
                 "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "${workspaceFolder}/implementation/test/core_test/common.cpp",
                 "-o",
                 "${workspaceFolder}/implementation/test/core_test/out/bayes.out"   
             ],

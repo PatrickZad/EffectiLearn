@@ -1,6 +1,6 @@
-#include "perception.h"
+#include "perceptron.h"
 using namespace patrick;
-Perception::Perception(double* dataArray, long width, int* lable, long length)
+Perceptron::Perceptron(double* dataArray,unsigned long width, int* lable, unsigned long length)
 : dataWidth{width},dataLength{length},weight{width},lable{length},bias{0}
 {
     for (long i = 0; i < length; i++)
@@ -10,13 +10,15 @@ Perception::Perception(double* dataArray, long width, int* lable, long length)
     }
 }
 
-void Perception::train(double rate){
+void Perceptron::train(double rate){
     double gram[dataLength*(dataLength+1)/2]={0};
-    for (long i = 0; i < dataLength; i++)
+    unsigned long turn;
+    for (unsigned long i = 0; i < dataLength; i++)
     {
-        for (long j = i; j < dataLength; j++)
+        for (unsigned long j = i; j < dataLength; j++)
         {
-            gram[i*(2*dataLength-i+1)/2+j]=data[i]*data[j];
+            unsigned long index=i*dataLength-i*(i-1)/2+j-i;
+            gram[index]=data[i]*data[j];
         }
     }
     
@@ -48,13 +50,13 @@ void Perception::train(double rate){
     }
 }
 
-int Perception::classify(double* dataRow,long width){
+int Perceptron::classify(double* dataRow, unsigned long width){
     Vector data{dataRow,width};
     double result=weight*data+bias;
     return result>0 ? 1 : -1 ;
 }
 
-double Perception::test(double* data, long width, int* lable, long length){
+double Perceptron::test(double* data, unsigned long width, int* lable, unsigned long length){
     long error=0;
     for (long i = 0; i < length; i++)
     {
@@ -66,7 +68,7 @@ double Perception::test(double* data, long width, int* lable, long length){
     return (double)error/length;
 }
 
-double Perception::getGram(double* gram,long i, long j){
+double Perceptron::getGram(double* gram, unsigned long i, unsigned long j){
     long row,column;
     if (i>j)
     {
