@@ -3,3 +3,5 @@
 /.vscode
 *.out
 /.VSCodeCounter
+/implementation/.idea
+/implementation/cmake-build-debug

@@ -20,12 +20,8 @@ include_directories(test/core_test)
 
 add_executable(implementation
         src/exception/exception.h
-        src/common/core/util.cpp
-        src/common/core/util.h
         src/common/core/Vector.cpp
         src/common/core/Vector.h
-        src/common/core/Matrix.cpp
-        src/common/core/Matrix.h
         src/bayes/core/bayes.cpp
         src/bayes/core/bayes.h
         src/common/core/classifier.cpp
