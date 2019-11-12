@@ -5,7 +5,8 @@ int main()
 {
     std::string file="/home/patrick/PatrickWorkspace/LearningAlgorithmsImplementation/implementation/test/dataset/iris_num.data";
     BinaryDataPtr data=readBinaryData(file);
-    patrick::Perceptron perceptron{data.data, data.width, data.lable, data.length};
-    perceptron.train();
+    patrick::Perceptron perceptron{};
+    perceptron.train(data.data, data.width, data.lable, data.length);
+    perceptron.test(data.data, data.width, data.lable, data.length);
     return 0;
 }

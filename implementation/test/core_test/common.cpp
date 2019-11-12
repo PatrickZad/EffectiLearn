@@ -56,7 +56,7 @@ BinaryDataPtr readBinaryData(std::string filepath)
             {
                 *(data+width*actualLength+j)=str2float(datastr[j]);
             }
-            *(lablePtr+i)=lable;
+            *(lablePtr+actualLength)=lable;
             actualLength++;
         }
     }

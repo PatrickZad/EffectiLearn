@@ -1,17 +1,14 @@
 #include "perceptron.h"
 using namespace patrick;
-Perceptron::Perceptron(double* dataArray,unsigned long width, int* lable, unsigned long length)
-: dataWidth{width},dataLength{length},weight{width},lable{length},bias{0}
-{
-    for (long i = 0; i < length; i++)
+
+void Perceptron::train(double* dataPtr,unsigned long width, int* lable,unsigned long dataLength){
+    double gram[dataLength*(dataLength+1)/2]={0};
+    std::vector<patrick::Vector> data;
+    for (unsigned long i = 0; i < dataLength; i++)
     {
-        Vector dataVector{dataArray+i*width,width};
+        Vector dataVector{dataPtr+i*width,width};
         data.push_back(dataVector);
     }
-}
-
-void Perceptron::train(double rate){
-    double gram[dataLength*(dataLength+1)/2]={0};
     unsigned long turn;
     for (unsigned long i = 0; i < dataLength; i++)
     {
@@ -23,17 +20,17 @@ void Perceptron::train(double rate){
     }
     
     double a[dataLength]={0};
-    int turns=200;
-    long error=0;
+    int turns=500;
+    unsigned long error=0;
     do
     {
         error=0;
-        for (long i = 0; i < dataLength; i++)
+        for (unsigned long i = 0; i < dataLength; i++)
         {
             double result = bias;
             for (long j = 0; j < dataLength; j++)
             {
-                result+=a[j]*lable[j]*getGram(gram,j,i);
+                result+=a[j]*lable[j]*getGram(gram, dataLength, j, i);
             }
             if (lable[i]*result<=0)
             {
@@ -42,10 +39,12 @@ void Perceptron::train(double rate){
                 bias+=rate*lable[i];
             }
         }
-        
-    } while (turns>0 || error>0);
+        turns--;
+    } while (turns>0 && error>0);
+    weight=Vector{width};
     for (long i = 0; i < dataLength; i++)
     {
+        
         weight+=data[i]*a[i]*lable[i];
     }
 }
@@ -65,11 +64,11 @@ double Perceptron::test(double* data, unsigned long width, int* lable, unsigned 
             error++;
         }
     }
-    return (double)error/length;
+    return 1-(double)error/length;
 }
 
-double Perceptron::getGram(double* gram, unsigned long i, unsigned long j){
-    long row,column;
+double Perceptron::getGram(double* gram,unsigned matWidth, unsigned long i, unsigned long j){
+    unsigned long row,column;
     if (i>j)
     {
         row=j;
@@ -79,5 +78,6 @@ double Perceptron::getGram(double* gram, unsigned long i, unsigned long j){
         row=i;
         column=j;
     }
-    return *(gram+row*(2*dataLength-row+1)/2+j);
+    unsigned long index=row*matWidth-row*(row-1)/2+column-row;
+    return *(gram+index);
 }
