@@ -4,9 +4,9 @@
 namespace patrick
 {
     template<class T>
-    unsigned long inversionNum(std::vector<T> sequence);
+    unsigned long inversionNum(std::vector<T>& sequence);
     template<class T>
-    std::vector<std::vector<T>> allPermutation(std::vector<T> sequence);
+    std::vector<std::vector<T>> allPermutation(std::vector<T>& sequence);
     
     template<class T>
     struct PermutationNode

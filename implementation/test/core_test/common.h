@@ -2,6 +2,7 @@
 #define TEST_COMMON_H
 #include <vector>
 #include <string>
+const std::string IRIS="/home/patrick/PatrickWorkspace/LearningAlgorithmsImplementation/implementation/test/dataset/iris_num.data";
 struct DataPtr
 {
     double* data;

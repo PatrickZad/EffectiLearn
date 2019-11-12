@@ -1,4 +1,4 @@
-#include "exception/exception.h"
+#include "./../../exception/exception.h"
 #include "Matrix.h"
 #include "util.h"
 #include <cmath>
@@ -26,7 +26,7 @@ Matrix::Matrix(unsigned long  length, unsigned long width, double init)
     
 }
 
-Matrix::Matrix(Vector& vec, short shape=VECTOR_COLUMN): start{new double[vec.size()]}
+Matrix::Matrix(Vector& vec, short shape): start{new double[vec.size()]}
 {
     for (unsigned long i = 0; i < vec.size(); i++)
     {
@@ -62,8 +62,8 @@ Matrix::Matrix(const Matrix& m)
 Matrix::Matrix(Matrix&& m) : width{m.width}, length{m.length}, start{m.start}
 {
     m.start=nullptr;
-    m.getWidth=0;
-    m.getWidth=0;
+    m.width=0;
+    m.length=0;
 }
 
 Matrix::~Matrix()
@@ -107,8 +107,8 @@ Matrix& Matrix::operator=(Matrix&& m)
     length=m.length;
     width=m.width;
     m.start=nullptr;
-    m.getWidth=0;
-    m.getWidth=0;
+    m.width=0;
+    m.length=0;
     return *this;
 }
 
@@ -123,22 +123,6 @@ Matrix& Matrix::operator+=(const Matrix& m)
         for (unsigned long j = 0; j < m.width; j++)
         {
             *this[i][j]+=m[i][j];
-        }
-    }
-    return *this;
-}
-
-Matrix& Matrix::operator+=(const Matrix& m)
-{
-    if(m.length!=length || m.width !=width)
-    {
-        throw CalculationInvalidException{};
-    }
-    for (unsigned long i = 0; i < m.length; i++)
-    {
-        for (unsigned long j = 0; j < m.width; j++)
-        {
-            *this[i][j]-=m[i][j];
         }
     }
     return *this;
@@ -193,12 +177,13 @@ double Matrix::det()
     {
         columns.push_back(i);
     }
-    std::vector<std::vector<unsigned long>> permutations=allPermutation<unsigned long>(columns);
+    std::vector<std::vector<unsigned long>> permutations;
+    permutations=allPermutation(columns);
     std::vector<std::vector<unsigned long>>::iterator iter=permutations.begin();
     double result=0;
     for (; iter!=permutations.end(); iter++)
     {
-        double product=std::pow(-1, inversionNum<unsigned long>(*iter));
+        double product=std::pow(-1, patrick::inversionNum(*iter));
         for (unsigned long i = 0; i < iter->size(); i++)
         {
             product*=(*this)[i][(*iter)[i]];
@@ -206,23 +191,6 @@ double Matrix::det()
         result+=product;
     }
     return result;
-}
-
-Matrix Matrix::adjugate()
-{
-    if ((width!=length) || (this->det()==0))
-    {
-        throw CalculationInvalidException{};
-    }   
-    Matrix adjugate{width, length};
-    for (unsigned long i = 0; i < length; i++)
-    {
-        for (unsigned long j = 0; j < width; j++)
-        {
-            adjugate[i][j]=subMatrix(*this, i, j).det();
-        }
-    }
-    return adjugate;
 }
 
 inline Matrix subMatrix(Matrix& origin, unsigned long row, unsigned long column)
@@ -252,6 +220,25 @@ inline Matrix subMatrix(Matrix& origin, unsigned long row, unsigned long column)
     }
     return sub;
 }
+
+Matrix Matrix::adjugate()
+{
+    if ((width!=length) || (this->det()==0))
+    {
+        throw CalculationInvalidException{};
+    }   
+    Matrix adjugate{width, length};
+    for (unsigned long i = 0; i < length; i++)
+    {
+        for (unsigned long j = 0; j < width; j++)
+        {
+            adjugate[i][j]=subMatrix(*this, i, j).det();
+        }
+    }
+    return adjugate;
+}
+
+
 
 std::vector<Vector> Matrix::getRows()
 {
@@ -288,7 +275,7 @@ Matrix patrick::operator*(const Matrix& m1, const Matrix& m2)
     {
         for (unsigned long j = 0; j < result.getWidth(); j++)
         {
-            result[i][j]=innerProduct(m1[i], m1.getWidth, m2[0]+j, m2.getWidth());
+            result[i][j]=innerProduct(m1[i], m1.getWidth(), m2[0]+j, m2.getWidth());
         }
     }
     return result;
@@ -324,23 +311,6 @@ Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
         for (unsigned long j = 0; j < result.getWidth(); j++)
         {
             result[i][j]=m1[i][j]+m2[i][j];
-        }
-    }
-    return result;
-}
-
-Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
-{
-    if (m1.getLength()!=m2.getLength() || m1.getWidth()!=m2.getWidth())
-    {
-        throw CalculationInvalidException{};
-    }
-    Matrix result{m1.getLength(),m1.getWidth()};
-    for (unsigned long i = 0; i < result.getLength(); i++)
-    {
-        for (unsigned long j = 0; j < result.getWidth(); j++)
-        {
-            result[i][j]=m1[i][j]-m2[i][j];
         }
     }
     return result;

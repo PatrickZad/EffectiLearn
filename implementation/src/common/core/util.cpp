@@ -1,6 +1,6 @@
 #include "util.h"
 template<class T>
-unsigned long patrick::inversionNum(std::vector<T>& sequence)
+unsigned long patrick::inversionNum(std::vector<T> sequence)
 {
     unsigned long result=0;
     unsigned long start=sequence.size()-1;
@@ -16,19 +16,16 @@ unsigned long patrick::inversionNum(std::vector<T>& sequence)
     }
     return result;
 }
-
 template<class T>
-std::vector<std::vector<T>> patrick::allPermutation(std::vector<T>& sequence)
+std::vector<std::vector<T>> patrick::allPermutation(std::vector<T> sequence)
 {
     std::vector<std::vector<T>> result;
     PermutationNode<T>* nullRoot=new PermutationNode<T>{sequence[0], nullptr};
     std::vector<PermutationNode<T>*> leaves;
     buildPermutationTree(nullRoot, sequence, leaves);
-    std::vector<PermutationNode<T>*>::iterator iter=leaves.begin();
-    for (; iter != leaves.end(); iter++)
-    {
+    for (unsigned long i = 0; i < leaves.size(); ++i) {
         std::vector<T> permutation;
-        next=*iter;
+        PermutationNode<T>* next=&leaves[i];
         while (next!=nullRoot)
         {
             permutation.push_back(next->data);
@@ -51,8 +48,7 @@ void patrick::buildPermutationTree(patrick::PermutationNode<T>* root, std::vecto
     {
         PermutationNode<T>* newNode=new PermutationNode<T>{leftData[i], root};
         std::vector<T> newLeft=leftData;//copy
-        std::vector<T>::iterater iter=leftData.begin();
-        newLeft.erase(iter+i);
+        newLeft.erase(&leftData[i]);
         buildPermutationTree(newNode, newLeft);
         root->nexts.push_back(newNode);
     }

@@ -2,44 +2,37 @@
 #include <vector>
 #include <map>
 using namespace patrick;
- Knn::Knn(DistanceFunc& distFunc, unsigned long k):k{k}
+void Knn::train(double* data, unsigned long width,unsigned long* lable, unsigned long length)
 {
-    tree.setDistFunc(distFunc);
-}
-
-void Knn::train(double* data, unsigned long width, long* lable, unsigned long length)
-{
-    std::vector<Vector> dataVec{};
+    std::vector<LabledVector> dataVec{};
     for (unsigned long i = 0; i < length; i++)
     {
-        Vector dataVector{data+i*width,width};
-        double lableD=*(lable+i);
-        dataVec.push_back(dataVector.concat(Vector{&lableD,1}));
+        LabledVector dataVector{data+i*width, width, *(lable+i)};
+        dataVec.push_back(dataVector);
     }
     tree.build(dataVec);
 }
 
-long Knn::classify(double* dataRow,unsigned long width)
+unsigned long Knn::classify(double* dataRow,unsigned long width)
 {
     Vector data{dataRow,width};
-    std::vector<Vector> nns=tree.searchNN(data,this->k);
-    std::map<long, unsigned long> countMap;
-    for (Vector vec : nns)
+    std::vector<LabledVector> nns=tree.searchNN(data,this->k);
+    std::map<unsigned long, unsigned long> countMap;
+    for (LabledVector vec : nns)
     {
-        long lable=vec[vec.size()-1];
-        if (countMap.count(lable)==0)
+        if (countMap.count(vec.lable)==0)
         {
-            countMap[lable]=1;
+            countMap[vec.lable]=1;
         }
         else
         {
-            countMap[lable]++;
+            countMap[vec.lable]++;
         }
         
     }
     long lable;
     long count=0;
-    std::map<long, unsigned long>::iterator iter=countMap.begin();
+    std::map<unsigned long, unsigned long>::iterator iter=countMap.begin();
     for (; iter != countMap.end() ; iter++)
     {
         if (iter->second>count)

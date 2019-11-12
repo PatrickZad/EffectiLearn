@@ -1,9 +1,18 @@
 #ifndef CORE_KDTREE_H
 #define CORE_KDTREE_H
 #include <vector>
-#include "common/core/dist_func.h"
-#include "common/core/Vector.h"
+#include "./../../common/core/dist_func.h"
+#include "./../../common/core/Vector.h"
 namespace patrick{
+    struct KDNode
+    {
+        std::vector<LabledVector> data;
+        KDNode* parent;
+        KDNode* left;
+        KDNode* right; 
+        unsigned long partitionDim;
+    };
+
     class KDTree
     {
     public:
@@ -11,35 +20,25 @@ namespace patrick{
         DistanceFunc& distFunc;
     public:
         KDTree(DistanceFunc& distFunc);
-        KDTree();
         //KDTree(std::vector<Vector>& data, DistanceFunc distFunc);
         ~KDTree();
 
         void setDistFunc(DistanceFunc& distFunc);
-        void build(std::vector<Vector>& data);
-        std::vector<Vector> searchNN(Vector& sample, unsigned long k);
+        void build(std::vector<LabledVector>& data);
+        std::vector<LabledVector> searchNN(Vector& sample, unsigned long k);
     private:
         void releaseTree(KDNode* root);
-        void buildTree(KDNode* parent,std::vector<Vector>& dataLeft,unsigned long dimension);
-    };
-    struct KDNode
-    {
-        std::vector<Vector> data;
-        KDNode* parent;
-        KDNode* left;
-        KDNode* right; 
-        unsigned long partitionDim;
+        void buildTree(KDNode* parent,std::vector<LabledVector>& dataLeft,unsigned long dimension);
     };
 
-    double getMid(std::vector<Vector>& collection, unsigned long dimension);
-    unsigned long partition(std::vector<Vector>& collection, unsigned long start, unsigned long end, unsigned long dimension);
+    double getMid(std::vector<LabledVector>& collection, unsigned long dimension);
+    unsigned long partition(std::vector<LabledVector>& collection, unsigned long start, unsigned long end, unsigned long dimension);
     KDNode* findArea(Vector& sample, KDNode* root);
-    void searchTree(Vector& sample, DistanceFunc distFunc, KDNode* root, DistanceHeap& heap);
-
+    
     struct HeapItem
     {
         double distance;
-        Vector* dataPtr;
+        LabledVector* dataPtr;
     };
     
 
@@ -53,17 +52,16 @@ namespace patrick{
         DistanceHeap(unsigned long length);
         ~DistanceHeap();
 
-        void push(double distance, Vector* dataPtr);
+        void push(double distance, LabledVector* dataPtr);
         double topDistance();
-        std::vector<Vector> tovector();
+        std::vector<LabledVector> tovector();
     
     private:
         void heapifyTopDown(unsigned long index);
         void heapifyDownTop(unsigned long index);
     };
-    
-    
-    
+    void searchTree(Vector& sample, DistanceFunc& distFunc, KDNode* root, DistanceHeap& heap);
+
 }
 
 #endif
