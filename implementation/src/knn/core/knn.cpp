@@ -30,8 +30,8 @@ unsigned long Knn::classify(double* dataRow,unsigned long width)
         }
         
     }
-    long lable;
-    long count=0;
+    unsigned long lable;
+    unsigned long count=0;
     std::map<unsigned long, unsigned long>::iterator iter=countMap.begin();
     for (; iter != countMap.end() ; iter++)
     {

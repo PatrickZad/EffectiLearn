@@ -2,7 +2,7 @@
 #include "./../../exception/exception.h"
 using namespace patrick;
 Vector::Vector(std::vector<double> stdvec)
-    :array{new double[stdvec.size()]}, length{stdvec.size()}
+    :array{new double[stdvec.size()]}, length{(unsigned long)stdvec.size()}
 {
     for (unsigned long i = 0; i < length; i++)
     {

@@ -117,7 +117,7 @@ unsigned long patrick::partition(std::vector<LabledVector>& collection, unsigned
     collection[randIndex]=temp;
     unsigned long left=start+1;
     unsigned long right=end;
-    while (left<=end)
+    while (left<=right)
     {
         while (collection[left][dimension]<=collection[start][dimension])
         {

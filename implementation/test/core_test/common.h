@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 const std::string IRIS="/home/patrick/PatrickWorkspace/LearningAlgorithmsImplementation/implementation/test/dataset/iris_num.data";
+const  std::string IROS_WIN="F:\\LearningAlgorithmsImplementation\\implementation\\test\\dataset\\iris_num.data";
 struct DataPtr
 {
     double* data;
