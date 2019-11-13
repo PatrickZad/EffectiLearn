@@ -52,6 +52,7 @@ namespace patrick{
         DistanceHeap(unsigned long length);
         ~DistanceHeap();
 
+        bool isFull();
         void push(double distance, LabledVector* dataPtr);
         double topDistance();
         std::vector<LabledVector> tovector();

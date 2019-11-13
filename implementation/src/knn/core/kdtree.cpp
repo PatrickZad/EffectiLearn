@@ -50,6 +50,11 @@ std::vector<LabledVector> KDTree::searchNN(Vector& sample, unsigned long k){
 
 void KDTree::buildTree(KDNode* parent,std::vector<LabledVector>& dataLeft,unsigned long depth)
 {
+    if (dataLeft.size()==0)
+    {
+        return;
+    }
+    
     std::vector<LabledVector> left{};
     std::vector<LabledVector> right{};
     unsigned long dimension=depth%(dataLeft[0].size());
@@ -69,12 +74,15 @@ void KDTree::buildTree(KDNode* parent,std::vector<LabledVector>& dataLeft,unsign
                 parent->data.push_back(vec);
             }
     }
-    if (left.size()>0 || right.size()>0)
+    if (left.size()>0)
     {
         KDNode* leftNode=new KDNode{};
         parent->left=leftNode;
         leftNode->parent=parent;
         buildTree(leftNode,left,depth+1);
+    }
+    if (right.size()>0)
+    {
         KDNode* rightNode=new KDNode{};
         parent->right=rightNode;
         rightNode->parent=parent;
@@ -158,29 +166,43 @@ KDNode* patrick::findArea(Vector& sample, KDNode* root){
 
 void patrick::searchTree(Vector& sample, DistanceFunc& distFunc, KDNode* root, DistanceHeap& heap)
 {
-    KDNode* area=findArea(sample,root);
-    for (LabledVector data : area->data)
+    if (root==nullptr)
     {
-        double distance=distFunc(data,sample);
-        if (heap.topDistance()>distance || heap.topDistance()<0)
+        return;
+    }
+    
+    KDNode* area=findArea(sample,root);
+    for (unsigned long i=0 ; i<area->data.size();i++)
+    {
+        double distance=distFunc(area->data[i],sample);
+        if (heap.topDistance()>distance || !heap.isFull())
         {
-            heap.push(distance,&data);
+            heap.push(distance,&(area->data[i]));
         }
     }
+    if (area->left!=nullptr)
+    {
+        searchTree(sample, distFunc, area->left, heap);
+    }
+    else if (area->right != nullptr)
+    {
+        searchTree(sample, distFunc, area->right, heap);
+    }
+    
     while (area != root)
     {
         area=area->parent;
         double distSampleToPartdim=std::abs(sample[area->partitionDim]-area->data[0][area->partitionDim]);
-        if (distSampleToPartdim<heap.topDistance())
+        if (distSampleToPartdim<heap.topDistance() || !heap.isFull())
         {
-            searchTree(sample,distFunc,area = area->left ? area->left : area->right,heap);
+            searchTree(sample,distFunc,(area==area->left) ? area->left : area->right,heap);
         }else
             if (distSampleToPartdim==heap.topDistance())
             {
                 for (LabledVector data : area->data)
                 {
                     double distance=distFunc(data,sample);
-                    if (heap.topDistance()>distance || heap.topDistance()<0)
+                    if (heap.topDistance()>distance || !heap.isFull())
                     {
                         heap.push(distance,&data);
                     }
@@ -205,6 +227,11 @@ DistanceHeap::~DistanceHeap()
     array=nullptr;
     dataLength=0;
     arrayLength=0;
+}
+
+bool DistanceHeap::isFull()
+{
+    return arrayLength==dataLength;
 }
 
 void DistanceHeap::push(double distance, LabledVector* dataPtr)
@@ -241,10 +268,12 @@ void DistanceHeap::heapifyTopDown(unsigned long index)
     unsigned long largest=index;
     unsigned long left=index*2+1;
     unsigned long right=2*(index+1);
-    if (left<dataLength && (array+left)->distance>(array+index)->distance){
+    if (left<dataLength && (array+left)->distance>(array+index)->distance)
+    {
         largest=left;
     }
-    if (right<dataLength && (array+right)->distance>(array+largest)->distance){
+    if (right<dataLength && (array+right)->distance>(array+largest)->distance)
+    {
         largest=right;
     }
     if (largest!=index){

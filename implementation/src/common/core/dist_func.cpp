@@ -21,5 +21,5 @@ double MinkowskiDist::operator()(Vector& vec0, Vector& vec1)
     {
         sum+=std::pow(std::abs(vec0[i]-vec1[i]),pow);
     }
-    return std::pow(sum, 1/pow);
+    return std::pow(sum, 1.0/pow);
 }
