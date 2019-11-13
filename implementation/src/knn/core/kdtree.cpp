@@ -69,19 +69,16 @@ void KDTree::buildTree(KDNode* parent,std::vector<LabledVector>& dataLeft,unsign
                 parent->data.push_back(vec);
             }
     }
-    if (left.size()>0)
+    if (left.size()>0 || right.size()>0)
     {
         KDNode* leftNode=new KDNode{};
         parent->left=leftNode;
         leftNode->parent=parent;
-        buildTree(leftNode,left,depth++);
-    }
-    if (right.size()>0)
-    {
+        buildTree(leftNode,left,depth+1);
         KDNode* rightNode=new KDNode{};
         parent->right=rightNode;
         rightNode->parent=parent;
-        buildTree(rightNode,right,depth++);
+        buildTree(rightNode,right,depth+1);
     }
 }
 
@@ -111,7 +108,7 @@ unsigned long patrick::partition(std::vector<LabledVector>& collection, unsigned
     {
         return start;
     }
-    unsigned long randIndex=start+std::rand()%(end-start);
+    unsigned long randIndex=start+std::rand()%(end-start+1);
     LabledVector temp=collection[start];
     collection[start]=collection[randIndex];
     collection[randIndex]=temp;
@@ -119,11 +116,11 @@ unsigned long patrick::partition(std::vector<LabledVector>& collection, unsigned
     unsigned long right=end;
     while (left<=right)
     {
-        while (collection[left][dimension]<=collection[start][dimension])
+        while (left<=right && collection[left][dimension]<=collection[start][dimension])
         {
             left++;
         }
-        while (collection[right][dimension]>collection[start][dimension])
+        while (right>=left && collection[right][dimension]>collection[start][dimension])
         {
             right--;
         }
@@ -172,14 +169,13 @@ void patrick::searchTree(Vector& sample, DistanceFunc& distFunc, KDNode* root, D
     }
     while (area != root)
     {
-        Vector distVector{sample.size()};
         area=area->parent;
-        distVector[area->partitionDim]=sample[area->partitionDim];
-        if (distFunc(sample,distVector)<heap.topDistance())
+        double distSampleToPartdim=std::abs(sample[area->partitionDim]-area->data[0][area->partitionDim]);
+        if (distSampleToPartdim<heap.topDistance())
         {
-            searchTree(sample,distFunc,area == area->left ? area->left : area->right,heap);
+            searchTree(sample,distFunc,area = area->left ? area->left : area->right,heap);
         }else
-            if (distFunc(sample,distVector)==heap.topDistance())
+            if (distSampleToPartdim==heap.topDistance())
             {
                 for (LabledVector data : area->data)
                 {
