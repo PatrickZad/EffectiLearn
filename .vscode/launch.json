@@ -41,6 +41,25 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "knn_test_debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/implementation/test/core_test/out/knn.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

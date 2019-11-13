@@ -27,6 +27,30 @@
         },
         {
             "type": "shell",
+            "label": "knn_test_build",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/implementation/src/knn/core/knn.cpp",
+                "${workspaceFolder}/implementation/src/knn/core/kdtree.cpp",
+                "${workspaceFolder}/implementation/test/core_test/knn_test.cpp",
+                "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "${workspaceFolder}/implementation/src/common/core/dist_func.cpp",
+                "${workspaceFolder}/implementation/test/core_test/common.cpp",
+                "-o",
+                "${workspaceFolder}/implementation/test/core_test/out/knn.out"   
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
             "label": "bayes_test_build",
             "command": "g++",
             "args": [
