@@ -28,13 +28,13 @@ namespace patrick
     };
     
 
-    class DecisionTree : Classifier
+    class DecisionTree : public Classifier
     {
     private:
         DtNode* root;
-        AttrSelecter selecter;
+        AttrSelecter& selecter;
     public:
-        DecisionTree(AttrSelecter& selecter=GainRatio{}):root{nullptr}{}, selecter{selecter}{};
+        DecisionTree(AttrSelecter& selecter):root{nullptr}, selecter{selecter}{};
         ~DecisionTree();
         DecisionTree(const DecisionTree& tree);
         DecisionTree(DecisionTree&& tree);
@@ -42,9 +42,9 @@ namespace patrick
         DecisionTree& operator=(const DecisionTree& tree);
         DecisionTree& operator=(DecisionTree&& tree);
 
-        void train(double* data, unsigned long width, long* lable, unsigned long length);
-        void train(double* data, unsigned long width, long* lable, unsigned long length,std::vector<unsigned long> discretAttrs);
-        long classify(double* dataRow,unsigned long width);
+        void train(double* data, unsigned long width, unsigned long* lable, unsigned long length);
+        void train(double* data, unsigned long width, unsigned long* lable, unsigned long length,std::vector<unsigned long> discretAttrs);
+        unsigned long classify(double* dataRow,unsigned long width);
     private:
         void buildTree(DtNode* root, std::vector<LabledVector>& datas, std::vector<Attr>& attrs);
         void releaseTree(DtNode* root);

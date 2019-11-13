@@ -5,13 +5,13 @@ DecisionTree::~DecisionTree(){
     releaseTree(root);
 }
 
-DecisionTree::DecisionTree(const DecisionTree& tree)
+DecisionTree::DecisionTree(const DecisionTree& tree) : selecter{tree.selecter}
 {
     root=new DtNode{};
     copyTree(root, tree.root);
 }
 
-DecisionTree::DecisionTree(DecisionTree&& tree)
+DecisionTree::DecisionTree(DecisionTree&& tree) : selecter{tree.selecter}
 {
     root=tree.root;
     tree.root=nullptr;
@@ -31,12 +31,12 @@ DecisionTree& DecisionTree::operator=(DecisionTree&& tree)
     tree.root=nullptr;
 }
 
-void DecisionTree::train(double* data, unsigned long width, long* lable, unsigned long length)
+void DecisionTree::train(double* data, unsigned long width, unsigned long* lable, unsigned long length)
 {
     train(data,width,lable,length,std::vector<unsigned long>{});
 }
 
-void DecisionTree::train(double* data, unsigned long width, long* lable, unsigned long length,std::vector<unsigned long> discretIndex)
+void DecisionTree::train(double* data, unsigned long width, unsigned long* lable, unsigned long length,std::vector<unsigned long> discretIndex)
 {
     std::vector<Attr> attrs{width};
     //set Attr isContinuos member
@@ -65,7 +65,7 @@ void DecisionTree::train(double* data, unsigned long width, long* lable, unsigne
     buildTree(root, datas, attrs);
 }
 
-long DecisionTree::classify(double* dataRow,unsigned long width)
+unsigned long DecisionTree::classify(double* dataRow,unsigned long width)
 {
     DtNode* node=root;
     while (node->subNodes.size()!=0)
