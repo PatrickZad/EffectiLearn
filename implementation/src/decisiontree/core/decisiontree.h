@@ -3,7 +3,7 @@
 #include <set>
 #include <map>
 #include <vector>
-#include "common/core/classifier.h"
+#include "./../../common/core/classifier.h"
 #include "attr_select.h" 
 namespace patrick
 {
@@ -16,7 +16,6 @@ namespace patrick
         //for continuos attribute, contains all values exit in tarin set
         //and after AttributeSelct, contarins only the value used to branch
         std::set<double> branchValues;
-
     };
     
     class DtNode

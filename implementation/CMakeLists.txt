@@ -24,6 +24,10 @@ add_executable(implementation
         src/common/core/Vector.h
         src/bayes/core/bayes.cpp
         src/bayes/core/bayes.h
+        src/decisiontree/core/decisiontree.h
+        src/decisiontree/core/decisiontree.cpp
+        src/decisiontree/core/attr_select.h
+        src/decisiontree/core/attr_select.cpp
         src/common/core/classifier.cpp
         src/common/core/classifier.h
         src/common/core/dist_func.cpp

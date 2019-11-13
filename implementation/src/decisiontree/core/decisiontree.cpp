@@ -1,5 +1,5 @@
 #include "decisiontree.h"
-#include "common/core/Vector.h"
+#include "./../../common/core/Vector.h"
 using namespace patrick;
 DecisionTree::~DecisionTree(){
     releaseTree(root);
@@ -73,7 +73,7 @@ unsigned long DecisionTree::classify(double* dataRow,unsigned long width)
         if (node->branchAttr.isContinuos)
         {
             if(*(dataRow+node->branchAttr.index)
-                >*(node->branchAttr.branchValues.begin))
+                >*(node->branchAttr.branchValues.begin()))
             {
                 node=node->subNodes[1];
             }else
@@ -162,7 +162,7 @@ void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std
         return;
     }
     //branch
-    Attr branchAttr=selecter(datas,attrs);
+    Attr branchAttr=selecter.operator()(datas, attrs);
     root->branchAttr=branchAttr;
     std::vector<Attr> newAttrs;
     for(Attr attr : attrs)
