@@ -4,7 +4,7 @@
 #include <vector>
 #include "./../../common/core/classifier.h"
 namespace patrick{
-    class NaiveBayes:Classifier
+    class NaiveBayes : public Classifier
     {
     private:
         std::vector<std::vector<std::vector<double>>> conMatrices;//elements are pointers of matrix counting samples by lables-attributs
