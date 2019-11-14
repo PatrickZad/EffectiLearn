@@ -70,6 +70,29 @@
                 "$gcc"
             ],
             "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "dtree_test_build",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/implementation/src/decisiontree/core/decisiontree.cpp",
+                "${workspaceFolder}/implementation/src/decisiontree/core/attr_select.cpp",
+                "${workspaceFolder}/implementation/test/core_test/decision_tree_test.cpp",
+                "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "${workspaceFolder}/implementation/test/core_test/common.cpp",
+                "-o",
+                "${workspaceFolder}/implementation/test/core_test/out/dtree.out"   
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         }
     ]
 }

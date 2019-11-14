@@ -1,11 +1,13 @@
 #include "attr_select.h"
 #include <set>
 #include <cmath>
+#include <map>
+#include <vector>
 using namespace patrick;
-Attr& InformationGain::operator()(std::vector<LabledVector> &datas, std::vector<Attr> &attrs)
+Attr InformationGain::operator()(std::vector<LabledVector> &datas, std::vector<Attr> &attrs)
 {
     //common constant will not be calculated
-    Attr& result=attrs[0];
+    Attr result;
     double gain=-1;
     std::set<double> attrBranchValues;
     for (Attr& attr : attrs)
@@ -86,9 +88,9 @@ Attr& InformationGain::operator()(std::vector<LabledVector> &datas, std::vector<
     return result;
 }
 
-Attr& GainRatio::operator()(std::vector<LabledVector>& datas, std::vector<Attr>& attrs)
+Attr GainRatio::operator()(std::vector<LabledVector>& datas, std::vector<Attr>& attrs)
 {
-    Attr& result=attrs[0];
+    Attr result;
     double gain=0;
     std::set<double> attrBranchValues;
     double dataEnt=informationEntropy(datas);
@@ -131,7 +133,7 @@ Attr& GainRatio::operator()(std::vector<LabledVector>& datas, std::vector<Attr>&
                         larger.push_back(*j);
                     }
                 }
-                double gainBranch=(dataEnt-smaller.size()*informationEntropy(smaller)+larger.size()*informationEntropy(larger))/intrinsic;
+                double gainBranch=(dataEnt-(smaller.size()*informationEntropy(smaller)+larger.size()*informationEntropy(larger))/datas.size())/intrinsic;
                 if (gainBranch>gainAttr)
                 {
                     gainAttr=gainBranch;
@@ -159,7 +161,7 @@ Attr& GainRatio::operator()(std::vector<LabledVector>& datas, std::vector<Attr>&
             {
                 gainAttr+=iter->second.size()*informationEntropy(iter->second);
             }
-            gainAttr=(dataEnt-gainAttr)/intrinsic;
+            gainAttr=(dataEnt-gainAttr/datas.size())/intrinsic;
             if (gainAttr>gain)
             {
                 gain=gainAttr;
@@ -172,9 +174,9 @@ Attr& GainRatio::operator()(std::vector<LabledVector>& datas, std::vector<Attr>&
     return result;
 }
 
-Attr& GiniIndex::operator()(std::vector<LabledVector>& datas, std::vector<Attr>& attrs)
+Attr GiniIndex::operator()(std::vector<LabledVector>& datas, std::vector<Attr>& attrs)
 {
-    Attr& result=attrs[0];
+    Attr result;
     double gini=0;
     std::set<double> attrBranchValues;
     for (Attr& attr : attrs)

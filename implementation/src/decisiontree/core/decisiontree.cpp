@@ -22,6 +22,7 @@ DecisionTree& DecisionTree::operator=(const DecisionTree& tree)
     releaseTree(root);
     root=new DtNode{};
     copyTree(root, tree.root);
+    return *this;
 }
 
 DecisionTree& DecisionTree::operator=(DecisionTree&& tree)
@@ -29,6 +30,7 @@ DecisionTree& DecisionTree::operator=(DecisionTree&& tree)
     releaseTree(root);
     root=tree.root;
     tree.root=nullptr;
+    return *this;
 }
 
 void DecisionTree::train(double* data, unsigned long width, unsigned long* lable, unsigned long length)
@@ -56,10 +58,11 @@ void DecisionTree::train(double* data, unsigned long width, unsigned long* lable
     {
         LabledVector dataVec{data+i*width, width, *(lable+i)};
         datas.push_back(dataVec);
+        /*
         for (unsigned long j = 0; j < width; i++)
         {
             attrs[j].branchValues.insert(dataVec[j]);
-        }
+        }*/
     }
     root = new DtNode{};
     buildTree(root, datas, attrs);
@@ -91,10 +94,10 @@ unsigned long DecisionTree::classify(double* dataRow,unsigned long width)
 void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std::vector<Attr>& attrs)
 {
     //return when only one kind of lable
-    long dataLable=datas[0].lable;
-    std::vector<LabledVector>::iterator iter=(datas.begin()++);
+    unsigned long dataLable=datas[0].lable;
+    std::vector<LabledVector>::iterator iter=datas.begin();
     bool oneLable=true;
-    for(;iter!=datas.end();iter++)
+    for(++iter;iter!=datas.end();iter++)
     {
         if (iter->lable!=dataLable)
         {
@@ -150,7 +153,7 @@ void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std
         std::map<long, unsigned long>::iterator mapIter=lableAmountMap.begin();
         unsigned long maxAmount=mapIter->second;
         dataLable=mapIter->first;
-        for(;mapIter!=lableAmountMap.end();mapIter++)
+        for(++mapIter;mapIter!=lableAmountMap.end();mapIter++)
         {
             if (mapIter->second>maxAmount)
             {
@@ -162,7 +165,7 @@ void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std
         return;
     }
     //branch
-    Attr branchAttr=selecter.operator()(datas, attrs);
+    Attr branchAttr=selecter(datas, attrs);
     root->branchAttr=branchAttr;
     std::vector<Attr> newAttrs;
     for(Attr attr : attrs)
@@ -197,10 +200,6 @@ void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std
         //build attrvalueDatas map
         for (; iter != datas.end(); iter++)
         {
-            if (attrvalueDatas.count((*iter)[branchAttr.index])==0)
-            {
-                attrvalueDatas[(*iter)[branchAttr.index]]=std::vector<LabledVector>{};
-            }
             attrvalueDatas[(*iter)[branchAttr.index]].push_back(*iter);
         }//end of build
         std::set<double>::iterator setIter=branchAttr.branchValues.begin();
@@ -214,6 +213,27 @@ void DecisionTree::buildTree(DtNode* root, std::vector<LabledVector>& datas, std
     
 }
 void DecisionTree::releaseTree(DtNode* root)
-{}
+{
+    if (root->subNodes.size()==0)
+    {
+        delete root;
+        return;
+    }
+    std::map<double, DtNode*>::iterator iter=root->subNodes.begin();
+    for (; iter != root->subNodes.end(); iter++)
+    {
+        releaseTree(iter->second);
+    }
+}
 void DecisionTree::copyTree(DtNode* destRoot, DtNode* srcRoot)
-{}
+{
+    destRoot->branchAttr=srcRoot->branchAttr;
+    destRoot->lable=srcRoot->lable;
+    std::map<double, DtNode*>::iterator iter=srcRoot->subNodes.begin();
+    for (; iter != srcRoot->subNodes.end(); iter++)
+    {
+        DtNode* destSubNode=new DtNode{};
+        destRoot->subNodes[iter->first]=destSubNode;
+        copyTree(destSubNode, iter->second);
+    }
+}

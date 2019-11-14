@@ -7,23 +7,14 @@
 #include "attr_select.h" 
 namespace patrick
 {
-    class Attr
-    {
-    public:
-        unsigned long index;
-        bool isContinuos=true;
-        //for discrete attribute, contains all possible values; 
-        //for continuos attribute, contains all values exit in tarin set
-        //and after AttributeSelct, contarins only the value used to branch
-        std::set<double> branchValues;
-    };
-    
     class DtNode
     {
     public:
         Attr branchAttr;
+        //key specifies which subNode to branch
+        //and for continuos attribute, 1 means larger, -1 means smaller
         std::map<double,DtNode*> subNodes; 
-        long lable;
+        unsigned long lable;
     };
     
 
