@@ -31,6 +31,7 @@ namespace patrick
 
     double informationEntropy(std::vector<LabledVector>& datas);
     double intrinsicValue(std::vector<LabledVector>& datas, Attr& attr);
+    double giniIndex(std::vector<LabledVector>& datas);
 } // namespace patrick
 
 #endif
