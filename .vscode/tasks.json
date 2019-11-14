@@ -93,6 +93,30 @@
                 "$gcc"
             ],
             "group": "build"
-        }
+        },
+        {
+            "type": "shell",
+            "label": "logistic_test_build",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${workspaceFolder}/implementation/src/logistic/core/logistic.cpp",
+                "${workspaceFolder}/implementation/test/core_test/logistic_test.cpp",
+                "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
+                "${workspaceFolder}/implementation/src/common/core/Matrix.cpp",
+                "${workspaceFolder}/implementation/src/common/core/optimizer.cpp",
+                "${workspaceFolder}/implementation/test/core_test/common.cpp",
+                "-o",
+                "${workspaceFolder}/implementation/test/core_test/out/logistic.out"   
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
     ]
 }

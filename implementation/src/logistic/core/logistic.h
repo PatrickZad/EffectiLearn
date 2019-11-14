@@ -1,21 +1,21 @@
 #ifndef CORE_LOGISTIC_H
 #define CORE_LOGISTIC_H
 #include <vector>
-#include "common/core/classifier.h"
-#include "common/core/optimizer.h"
-#include "common/core/Vector.h"
-#include "common/core/Matrix.h"
+#include "./../../common/core/classifier.h"
+#include "./../../common/core/optimizer.h"
+#include "./../../common/core/Vector.h"
+#include "./../../common/core/Matrix.h"
 namespace patrick
 {
-    class Logistic : Classifier
+    class Logistic : public Classifier
     {
     private:
         Matrix weights;
         unsigned long k;
     public:
         Logistic(unsigned long k) : k{k}{};
-        void train(double* data, unsigned long width, long* lable, unsigned long length);//lable belongs to {0,1,2,...,k-1}
-        long classify(double* dataRow,unsigned long width);
+        void train(double* data, unsigned long width, unsigned long* lable, unsigned long length);//lable belongs to {0,1,2,...,k-1}
+        unsigned long classify(double* dataRow,unsigned long width);
     };
 
     class LogisticDerivative : public FirstOrderDerivative<Matrix>

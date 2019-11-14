@@ -26,7 +26,7 @@ void Logistic::train(double* data, unsigned long width, long* lable, unsigned lo
     weights=target.GradientDescent(weights, 0.1);
 }
 
-long Logistic::classify(double* dataRow,unsigned long width)
+unsigned long Logistic::classify(double* dataRow,unsigned long width)
 {
     unsigned long lable=k-1;
     double value=1;
