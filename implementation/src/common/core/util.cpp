@@ -1,6 +1,8 @@
+/*
 #include "util.h"
+
 template<class T>
-unsigned long patrick::inversionNum(std::vector<T> sequence)
+unsigned long patrick::inversionNum(std::vector<T>& sequence)
 {
     unsigned long result=0;
     unsigned long start=sequence.size()-1;
@@ -17,7 +19,7 @@ unsigned long patrick::inversionNum(std::vector<T> sequence)
     return result;
 }
 template<class T>
-std::vector<std::vector<T>> patrick::allPermutation(std::vector<T> sequence)
+std::vector<std::vector<T>> patrick::allPermutation(std::vector<T>& sequence)
 {
     std::vector<std::vector<T>> result;
     PermutationNode<T>* nullRoot=new PermutationNode<T>{sequence[0], nullptr};
@@ -65,4 +67,4 @@ void patrick::releaseTree(patrick::PermutationNode<T>* root)
         releaseTree(root->nexts[i]);
     }
     delete root;
-}
+}*/

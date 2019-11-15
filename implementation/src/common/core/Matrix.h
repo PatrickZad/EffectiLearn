@@ -17,7 +17,7 @@ namespace patrick
         Matrix(unsigned long squareWidth);
         Matrix(unsigned long  length, unsigned long width, double init=0);
         Matrix(Vector& vec, short shape=VECTOR_COLUMN);
-        Matrix(std::vector<Vector> vects, short shape=VECTOR_COLUMN);
+        Matrix(std::vector<Vector>& vects, short shape=VECTOR_COLUMN);
         Matrix(const Matrix& m);
         Matrix(Matrix&& m);
         ~Matrix();
@@ -30,9 +30,10 @@ namespace patrick
         Matrix& operator-=(const Matrix& m);
         double* operator[](unsigned long index)const;
         Matrix transposition();
+        /*
         Matrix inverse();
         double det();
-        Matrix adjugate();
+        Matrix adjugate();*/
         std::vector<Vector> getRows();
         std::vector<Vector> getColumns();
     };
