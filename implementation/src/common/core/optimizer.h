@@ -2,6 +2,7 @@
 #define CORE_COMMON_OPTIMIZER_H
 #include "Vector.h"
 #include <vector>
+#include <cmath>
 namespace patrick
 {
     template<class T>
@@ -20,35 +21,27 @@ namespace patrick
         TargetFunction(FirstOrderDerivative<T>& derivative):derivative{derivative}{};//initial value of target
         virtual double operator()(T& input)=0;//tarin data
         //T RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200);
-        T GradientDescent(T& init, double rate, double minVariation=0.001,unsigned int maxReapt=200);
-    };
-    template<class T>
-    class RateTargetDerivative : public FirstOrderDerivative<double>
-    {
-    private:
-       FirstOrderDerivative<T>& originDerivative;
-       Vector originInput;
-    public:
-        RateTargetDerivative(FirstOrderDerivative<Vector>& originDerivative, Vector& originInput)
-            :originDerivative{originDerivative},originInput{originInput}{};
-        double operator()(double& input);
-    };
-    
-    template<class T>
-    class RateTarget : public TargetFunction<double>
-    {
-    private:
-        TargetFunction<T>& originTarget;
-        Vector& originInput;
-
-    public:
-        RateTarget(TargetFunction<T>& originTarget, Vector& originInput)
-            :TargetFunction{*(new RateTargetDerivative{originTarget.derivative,originInput})}, 
-                originTarget{originTarget} ,originInput{originInput}{};
-        ~RateTarget();
-        double operator()(double& input);
-        double searchRate(double minVariation=0.001, unsigned int maxReapt=200);//one-dimention search
+        T GradientDescent(T& init, double rate, double minVariation=0.1,unsigned int maxRepeat=500);
     };
     
 } // namespace patrick
+using namespace patrick;
+template<class T>
+T TargetFunction<T>::GradientDescent(T& init, double rate, double minVariation,unsigned int maxReapt)
+{
+    T minimumPoint=init;
+    double previous=(*this)(minimumPoint);
+    for (unsigned int i = 0; i < maxReapt; i++)
+    {
+        T newInput=minimumPoint-derivative(minimumPoint)*rate;
+        double newValue=(*this)(newInput);
+        if (std::fabs(newValue-previous)<minVariation)
+        {
+            break;
+        }
+        previous=newValue;
+        minimumPoint=newInput;
+    }
+    return minimumPoint;
+}
 #endif

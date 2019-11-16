@@ -2,6 +2,8 @@
 #include "Matrix.h"
 #include "util.h"
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 using namespace patrick;
 
 Matrix::Matrix(unsigned long squareWidth)
@@ -47,6 +49,32 @@ Matrix::Matrix(Vector& vec, short shape): start{new double[vec.size()]}
     }
 }
 
+Matrix::Matrix(std::vector<Vector>& vects, short shape)
+{
+    if (vects.size()==0){
+        return ;
+    }
+    start=new double[vects.size()*vects[0].size()];
+    if (shape==VECTOR_COLUMN)
+    {
+        length=vects[0].size();
+        width=vects.size();
+        for (unsigned long i=0; i<length; i++){
+            for (unsigned long j=0; j<width; j++){
+                *(start+i*width+j)=vects[j][i];
+            }
+        }
+    } else{
+        width=vects[0].size();
+        length=vects.size();
+        for (unsigned long i=0; i<length; i++){
+            for (unsigned long j=0; j<width; j++){
+                *(start+i*width+j)=vects[i][j];
+            }
+        }
+    }
+}
+
 Matrix::Matrix(const Matrix& m)
     : width{m.width}, length{m.length}, start{new double[m.width*m.length]}
 {
@@ -54,7 +82,7 @@ Matrix::Matrix(const Matrix& m)
     {
         for (unsigned long j = 0; j < m.width; j++)
         {
-            *this[i][j]=m[i][j];
+            (*this)[i][j]=m[i][j];
         }
     }
 }
@@ -94,7 +122,7 @@ Matrix& Matrix::operator=(const Matrix& m)
     {
         for (unsigned long j = 0; j < m.width; j++)
         {
-            *this[i][j]=m[i][j];
+            (*this)[i][j]=m[i][j];
         }
     }
     return *this;
@@ -122,7 +150,7 @@ Matrix& Matrix::operator+=(const Matrix& m)
     {
         for (unsigned long j = 0; j < m.width; j++)
         {
-            *this[i][j]+=m[i][j];
+            (*this)[i][j]+=m[i][j];
         }
     }
     return *this;
@@ -155,7 +183,7 @@ inline double innerProduct(double* row, unsigned long width, double* column, uns
     }
     return sum;
 }
-
+/*
 Matrix Matrix::inverse()
 {
     if ((width!=length) || (this->det()==0))
@@ -237,9 +265,7 @@ Matrix Matrix::adjugate()
     }
     return adjugate;
 }
-
-
-
+*/
 std::vector<Vector> Matrix::getRows()
 {
     std::vector<Vector> result;
@@ -257,7 +283,7 @@ std::vector<Vector> Matrix::getColumns()
         Vector column{length};
         for (unsigned long j = 0; j < length; j++)
         {
-            result[j]=(*this)[j][i];
+            column[j]=(*this)[j][i];
         }
         result.push_back(column);
     }
@@ -316,6 +342,23 @@ Matrix patrick::operator+(const Matrix& m1, const Matrix& m2)
     return result;
 }
 
+Matrix patrick::operator-(const Matrix& m1, const Matrix& m2)
+{
+    if (m1.getLength()!=m2.getLength() || m1.getWidth()!=m2.getWidth())
+    {
+        throw CalculationInvalidException{};
+    }
+    Matrix result{m1.getLength(),m1.getWidth()};
+    for (unsigned long i = 0; i < result.getLength(); i++)
+    {
+        for (unsigned long j = 0; j < result.getWidth(); j++)
+        {
+            result[i][j]=m1[i][j]-m2[i][j];
+        }
+    }
+    return result;
+}
+
 Matrix patrick::operator/(const Matrix& m, double num)
 {
     Matrix result{m.getLength(),m.getWidth()};
@@ -324,6 +367,20 @@ Matrix patrick::operator/(const Matrix& m, double num)
         for (unsigned long j = 0; j < result.getWidth(); j++)
         {
             result[i][j]=m[i][j]/num;
+        }
+    }
+    return result;
+}
+
+Matrix patrick::randMatrix(unsigned long length, unsigned long width)
+{
+    Matrix result{length, width};
+    std::srand(0);
+    for (unsigned long i = 0; i < length; i++)
+    {
+        for (unsigned long j = 0; j < width; j++)
+        {
+            result[i][j]=(double)(rand()%10)/10;
         }
     }
     return result;

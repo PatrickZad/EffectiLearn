@@ -105,7 +105,6 @@
                 "${workspaceFolder}/implementation/src/common/core/classifier.cpp",
                 "${workspaceFolder}/implementation/src/common/core/Vector.cpp",
                 "${workspaceFolder}/implementation/src/common/core/Matrix.cpp",
-                "${workspaceFolder}/implementation/src/common/core/optimizer.cpp",
                 "${workspaceFolder}/implementation/test/core_test/common.cpp",
                 "-o",
                 "${workspaceFolder}/implementation/test/core_test/out/logistic.out"   

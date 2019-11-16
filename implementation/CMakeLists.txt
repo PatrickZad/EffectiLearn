@@ -20,6 +20,8 @@ include_directories(test/core_test)
 
 add_executable(implementation
         src/exception/exception.h
+        src/common/core/util.h
+        src/common/core/util.cpp
         src/common/core/Vector.cpp
         src/common/core/Vector.h
         src/common/core/Matrix.cpp
@@ -28,6 +30,8 @@ add_executable(implementation
         src/common/core/optimizer.cpp
         src/bayes/core/bayes.cpp
         src/bayes/core/bayes.h
+        src/logistic/core/logistic.h
+        src/logistic/core/logistic.cpp
         src/decisiontree/core/decisiontree.h
         src/decisiontree/core/decisiontree.cpp
         src/logistic/core/logistic.h
@@ -46,4 +50,4 @@ add_executable(implementation
         src/perceptron/core/perceptron.h
         test/core_test/common.cpp
         test/core_test/common.h
-        test/core_test/knn_test.cpp)
+        test/core_test/logistic_test.cpp)

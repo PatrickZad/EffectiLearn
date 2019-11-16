@@ -3,26 +3,17 @@
 #include <cmath>
 using namespace patrick;
 
-void Logistic::train(double* data, unsigned long width, long* lable, unsigned long length)
+void Logistic::train(double* data, unsigned long width, unsigned long* lable, unsigned long length)
 {
-    std::vector<Matrix> bMatrices{k-1};
-    //initialize bMatrices
-    for (unsigned long i = 0; i < k-1; i++)
+    std::map<unsigned long, std::vector<Vector>> lableDataMap;
+    for (unsigned long i = 0; i < length; i++)
     {
-        bMatrices[i]=Matrix{1,k-1};
-        bMatrices[i][0][i]=1;
+        Vector sample{data+i*width, width};
+        sample.append(1);
+        lableDataMap[*(lable+i)].push_back(sample);
     }
-    //initialize weights
-    weights=Matrix{k-1,width,0.01};
-    //build training data
-    std::vector<Vector> datas;
-    std::vector<unsigned long> lables;
-    for (unsigned long i=0; i < length; i++)
-    {
-        datas.push_back(Vector{data+width*i,width});
-        lables.push_back(*(lable+i));
-    }
-    LogisticTarget target{bMatrices, datas, lables};
+    weights=randMatrix(width+1, lableDataMap.size()-1);
+    LogisticTarget target{lableDataMap};
     weights=target.GradientDescent(weights, 0.1);
 }
 
@@ -44,50 +35,64 @@ unsigned long Logistic::classify(double* dataRow,unsigned long width)
     return lable;
 }
 
-Matrix LogisticDerivative::operator()(Matrix& weights)
+inline double denominator(std::vector<Vector>& weights, Vector& sample)
 {
-    Matrix result{weights.getLength,weights.getWidth};
-    for (unsigned long i = 0; i < datas.size(); i++)
+    double result=1;
+    for (Vector& weight : weights)
     {
-        Matrix part1{};
-        if (lables[i]!=weights.getLength())
-        {
-            part1=bMatrices[lables[i]].transposition()*Matrix{datas[i],VECTOR_ROW};
-        }
-        else
-        {
-            part1=Matrix{weights.getLength(),weights.getWidth()};
-        }
-        
-        Matrix numerator{weights.getLength(),weights.getWidth()};
-        double denominator=1;
-        for (unsigned long j = 0; j < weights.getLength(); j++)
-        {
-            double exp=std::exp(Vector{weights[j], weights.getWidth()}*datas[i]);
-            numerator+=bMatrices[j].transposition()*Matrix{datas[i],VECTOR_ROW}*exp;
-            denominator+=exp;
-        }
-        result+=(part1+numerator/denominator);
+        result+=std::exp(weight*sample);
     }
     return result;
+}
+
+Matrix LogisticDerivative::operator()(Matrix& weights)
+{
+    std::vector<Vector> columns=weights.getColumns();
+    std::vector<Vector> gradients;
+    for (unsigned long i=0; i<columns.size(); i++)
+    {
+        Vector gradient{columns[0].size()};
+        std::map<unsigned long, std::vector<Vector>>::iterator iter=lableDataMap.begin();
+        for ( ; iter != lableDataMap.end(); iter++)//different lables and their datas
+        {
+            for (Vector& sample : iter->second)
+            {
+                double multi=std::exp(columns[i]*sample)/denominator(columns, sample);
+                gradient+=multi*sample;   
+            }
+        }
+        for (Vector& sample : lableDataMap[i])
+        {
+            gradient-=sample;
+        }
+        gradients.push_back(gradient);
+    }
+    return Matrix{gradients};
+}
+
+LogisticTarget::~LogisticTarget()
+{
+    delete &derivative;
 }
 
 double LogisticTarget::operator()(Matrix& weights)
 {
     double result=0;
-    for (unsigned long i = 0; i < datas.size(); i++)
+    std::vector<Vector> columns=weights.getColumns();
+    std::map<unsigned long, std::vector<Vector>>::iterator iter=lableDataMap.begin();
+    for ( ; iter != lableDataMap.end(); iter++)
     {
-        double part1=0;
-        if (lables[i]!=weights.getLength())
+        for (Vector& sample : iter->second)
         {
-            part1=Vector{weights[lables[i]], weights.getWidth()}*datas[i];
+            result+=std::log(denominator(columns, sample)); 
         }
-        double part2=1;
-        for (unsigned long j = 0; j < weights.getLength(); j++)
+    }
+    for (unsigned long i = 0; i < columns.size(); i++)
+    {
+        for (Vector& sample : lableDataMap[i])
         {
-            part2+=std::exp(Vector{weights[j], weights.getWidth()}*datas[i]);
+            result-=columns[i]*sample;
         }
-        result+=(part1-std::log(part2));
     }
     return result;
 }
