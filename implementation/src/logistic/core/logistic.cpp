@@ -12,7 +12,7 @@ void Logistic::train(double* data, unsigned long width, unsigned long* lable, un
         sample.append(1);
         lableDataMap[*(lable+i)].push_back(sample);
     }
-    weights=Matrix{width+1, lableDataMap.size()-1, 0.01};
+    weights=randMatrix(width+1, lableDataMap.size()-1);
     LogisticTarget target{lableDataMap};
     weights=target.GradientDescent(weights, 0.1);
 }
@@ -84,7 +84,7 @@ double LogisticTarget::operator()(Matrix& weights)
     {
         for (Vector& sample : iter->second)
         {
-            result+=denominator(columns, sample); 
+            result+=std::log(denominator(columns, sample)); 
         }
     }
     for (unsigned long i = 0; i < columns.size(); i++)

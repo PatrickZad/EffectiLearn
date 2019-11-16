@@ -15,7 +15,7 @@ namespace patrick
     public:
         Matrix(){};
         Matrix(unsigned long squareWidth);
-        Matrix(unsigned long  length, unsigned long width, double init=0);
+        Matrix(unsigned long length, unsigned long width, double init=0);
         Matrix(Vector& vec, short shape=VECTOR_COLUMN);
         Matrix(std::vector<Vector>& vects, short shape=VECTOR_COLUMN);
         Matrix(const Matrix& m);
@@ -46,6 +46,7 @@ namespace patrick
     Matrix operator/(const Matrix& m, double num);
     Matrix wideMultiply(Vector& vec, Matrix& mat);
     Matrix wideMultiply(Matrix& mat, Vector& vec);
+    Matrix randMatrix(unsigned long length, unsigned long width);
 } // namespace patrick
 
 #endif

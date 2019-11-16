@@ -64,7 +64,7 @@ void Layer::initParemeters()
     {
         for (unsigned long j = 0; j < weights.getWidth(); j++)
         {
-            weights[i][j]=(rand()%10)/10;
+            weights[i][j]=(double)(rand()%10)/10;
         }
     }
     weightsTrans=weights.transposition();

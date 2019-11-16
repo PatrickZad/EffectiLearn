@@ -21,7 +21,7 @@ namespace patrick
         TargetFunction(FirstOrderDerivative<T>& derivative):derivative{derivative}{};//initial value of target
         virtual double operator()(T& input)=0;//tarin data
         //T RapidGradientDescent(T& init, double minVariation=0.001,unsigned int maxReapt=200);
-        T GradientDescent(T& init, double rate, double minVariation=0.001,unsigned int maxRepeat=500);
+        T GradientDescent(T& init, double rate, double minVariation=0.1,unsigned int maxRepeat=500);
     };
     
 } // namespace patrick
