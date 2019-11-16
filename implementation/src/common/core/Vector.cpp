@@ -194,7 +194,7 @@ Vector patrick::operator-(const Vector& v1, const Vector& v2)
     {
         throw CalculationInvalidException{};
     }
-    double diff[v1.size()];
+    double* diff=new double[v1.size()];
     for (unsigned long i = 0; i < v1.size(); i++){
         diff[i]=v1[i]-v2[i];
     }    

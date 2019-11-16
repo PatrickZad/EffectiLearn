@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 const std::string IRIS="/home/patrick/PatrickWorkspace/LearningAlgorithmsImplementation/implementation/test/dataset/iris_num.data";
-const  std::string IROS_WIN="F:\\LearningAlgorithmsImplementation\\implementation\\test\\dataset\\iris_num.data";
+const  std::string IRIS_WIN="F:\\LearningAlgorithmsImplementation\\implementation\\test\\dataset\\iris_num.data";
 struct DataPtr
 {
     double* data;
@@ -15,7 +15,7 @@ struct BinaryDataPtr
 {
     double* data;
     unsigned long width;
-    int* lable;
+    unsigned long* lable;
     unsigned long length;
 };
 DataPtr readData(std::string filepath);

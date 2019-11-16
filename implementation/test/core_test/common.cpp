@@ -44,13 +44,13 @@ BinaryDataPtr readBinaryData(std::string filepath)
     unsigned long width=split(lines[0], ',').size()-1;
     unsigned long length=lines.size();
     double *data = new double[width*length];
-    int *lablePtr = new int[length];
+    unsigned long *lablePtr = new unsigned long[length];
     unsigned long actualLength=0;
     for (unsigned long i = 0; i < length; i++)
     {
         vector<string> datastr=split(lines[i], ',');
-        int lable=(long)lableStr2Int(datastr[width])-2;
-        if (lable==1 || lable==-1)
+        long lable=lableStr2Int(datastr[width]);
+        if (lable==1 || lable==0)
         {
             for (unsigned long j = 0; j < width; j++)
             {

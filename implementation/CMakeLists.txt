@@ -28,8 +28,12 @@ add_executable(implementation
         src/common/core/Matrix.h
         src/common/core/optimizer.h
         src/common/core/optimizer.cpp
+        src/common/core/kernel_function.h
+        src/common/core/kernel_function.cpp
         src/bayes/core/bayes.cpp
         src/bayes/core/bayes.h
+        src/kernel_svm/core/svm.h
+        src/kernel_svm/core/svm.cpp
         src/logistic/core/logistic.h
         src/logistic/core/logistic.cpp
         src/decisiontree/core/decisiontree.h
@@ -50,4 +54,4 @@ add_executable(implementation
         src/perceptron/core/perceptron.h
         test/core_test/common.cpp
         test/core_test/common.h
-        test/core_test/logistic_test.cpp)
+        test/core_test/svm_test.cpp)

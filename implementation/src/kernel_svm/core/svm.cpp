@@ -1,13 +1,16 @@
 #include "svm.h"
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 using namespace patrick;
 void SVM::train(double* data, unsigned long width, unsigned long* lable, unsigned long length)
 {
     //init vectors
+    std::srand(0);
     for (unsigned long i = 0; i < length; i++)
     {
         datas.push_back(LabledVector{data+width*i, width, *(lable+i) > 0 ? 1 : -1});
-        alphas.push_back(0);
+        alphas.push_back((double)(std::rand()%10)/10);
     }
     //smo solve method
     for (unsigned int i = 0; i < maxRepeat; i++)
@@ -96,7 +99,7 @@ unsigned long SVM::selectFirstAlpha()
                 resultIndex=i;
                 absBias=abs;
             }
-            break;
+            continue;
         }
         if (alphas[i]==0)
         {
@@ -105,7 +108,7 @@ unsigned long SVM::selectFirstAlpha()
                 outIterIndex=i;
                 absBiasOutIter=abs;
             }
-            break;
+            continue;
         }
         if (bias>minChange && abs>absBiasOutIter)
         {

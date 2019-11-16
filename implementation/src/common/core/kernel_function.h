@@ -9,7 +9,7 @@ namespace patrick
         virtual double operator()(Vector& vec0, Vector& vec1)=0;
     };
 
-    class PolynomialKernel : KernelFunction
+    class PolynomialKernel : public KernelFunction
     {
     private:
         unsigned int pow;
@@ -18,7 +18,7 @@ namespace patrick
         double operator()(Vector& vec0, Vector& vec1);
     };
 
-    class GaussianKernel : KernelFunction
+    class GaussianKernel : public KernelFunction
     {
     private:
         double sigma_square;
