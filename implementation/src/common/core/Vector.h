@@ -38,9 +38,9 @@ namespace patrick
     class LabledVector : public Vector
     {
     public:
-        unsigned long lable;
+        long long lable;
     public:
-        LabledVector(double* row, unsigned long length,unsigned long lable) 
+        LabledVector(double* row, unsigned long length,long long lable) 
             : Vector{row, length}, lable{lable}{};
         LabledVector(const LabledVector& vector);
         LabledVector(LabledVector&& vector);

@@ -1,12 +1,12 @@
 #include "svm.h"
 #include <cmath>
 using namespace patrick;
-void SVM::train(double* data, unsigned long width, long* lable, unsigned long length)
+void SVM::train(double* data, unsigned long width, unsigned long* lable, unsigned long length)
 {
     //init vectors
     for (unsigned long i = 0; i < length; i++)
     {
-        datas.push_back(LabledVector{data+width*i, width, *(lable+i)});
+        datas.push_back(LabledVector{data+width*i, width, *(lable+i) > 0 ? 1 : -1});
         alphas.push_back(0);
     }
     //smo solve method
@@ -63,10 +63,10 @@ void SVM::train(double* data, unsigned long width, long* lable, unsigned long le
     }
     
 }
-long SVM::classify(double* dataRow,unsigned long width)
+unsigned long SVM::classify(double* dataRow,unsigned long width)
 {
     Vector data{dataRow, width};
-    return originOutput(data)<0 ? -1 : 1 ;
+    return originOutput(data)<0 ? 0 : 1 ;
 }
 
 double SVM::originOutput(Vector& data)
