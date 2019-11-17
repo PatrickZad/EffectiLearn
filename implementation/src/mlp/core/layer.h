@@ -13,6 +13,7 @@ namespace patrick
         ActivationFunc& activation;
         unsigned long width;
     public:
+    //width is number of neurons, dataLength is width of input
         Layer(ActivationFunc& activation, unsigned long width, unsigned long dataLength);
         Vector output(Vector& input);
         Matrix derivativeInput(Vector& input);

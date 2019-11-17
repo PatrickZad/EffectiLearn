@@ -23,5 +23,12 @@ Vector CrossEntropy::derivative(std::vector<LabledVector> datas, std::vector<Vec
     {
         result[datas[i].lable]-=1/outputs[i][datas[i].lable];
     }
+    return result*(1.0/datas.size());
+}
+
+Vector CrossEntropy::derivative(LabledVector data, Vector output)
+{
+    Vector result{output.size()};
+    result[data.lable]-=1/output[data.lable];
     return result;
 }

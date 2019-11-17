@@ -5,20 +5,22 @@
 #include <vector>
 #include "cost.h"
 #include "layer.h"
+#include "./../../common/core/classifier.h"
 namespace patrick
 {
-    class MLP 
+    class MLP : public Classifier
     {
     private:
         std::vector<Layer> network;
         CostFunc& cost;
-        int maxRepeat=200;
+        int maxRepeat=500;
         double minChange=0.001;
-        double rate=0.1;
+        double rate=0.01;
     public:
-        MLP(unsigned long dataWidth, unsigned long depth, unsigned long * widths, ActivationFunc* activations, CostFunc& cost);
+    //input layer not need to be included, output layer included
         MLP(std::vector<Layer> layers, CostFunc& cost) : network{layers}, cost{cost} {};
-        void train(double* data, unsigned long width, long* lable, unsigned long length);
+        void train(double* data, unsigned long width,unsigned long* lable, unsigned long length);
+        unsigned long classify(double* dataRow,unsigned long width);
         Vector output(double* data, unsigned long width);
     };
     
