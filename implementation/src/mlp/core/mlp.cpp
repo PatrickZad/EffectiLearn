@@ -1,19 +1,8 @@
 #include "mlp.h"
 #include <cmath>
 using namespace patrick;
-MLP::MLP(unsigned long dataWidth, unsigned long depth, unsigned long * widths, ActivationFunc* activations, CostFunc& cost)
-    :cost{cost}
-{
-    Layer first{*activations, *widths, dataWidth};
-    network.push_back(first);
-    for (unsigned long i = 1; i < depth; i++)
-    {
-        Layer layer{*(activations+i), *(widths+i), *(widths+i-1)};
-        network.push_back(layer);
-    }
-}
 
-void MLP::train(double* data, unsigned long width, long* lable, unsigned long length)
+void MLP::train(double* data, unsigned long width,unsigned long* lable, unsigned long length)
 {
     std::vector<LabledVector> datas;
     for (unsigned long i = 0; i < length; i++)
@@ -40,7 +29,7 @@ void MLP::train(double* data, unsigned long width, long* lable, unsigned long le
             }//output is the final output when ends
             currentCost+=cost.cost(datas[i], output);
             //calculate accumulated gradient matrices
-            Vector costToOutputGradient=cost.derivative(output);
+            Vector costToOutputGradient=cost.derivative(datas[i],output);
             unsigned long layerIndex=network.size()-1;
             for (; layerIndex >=0; layerIndex--)
             {
@@ -71,6 +60,22 @@ void MLP::train(double* data, unsigned long width, long* lable, unsigned long le
         }
         preCost=currentCost;
     }
+}
+
+unsigned long MLP::classify(double* dataRow,unsigned long width)
+{
+    Vector out=output(dataRow,width);
+    unsigned long lable=0;
+    double value=0;
+    for (unsigned long i = 0; i < out.size(); i++)
+    {
+        if (out[i]>value)
+        {
+            value=out[i];
+            lable=i;
+        }
+    }
+    return lable;
 }
 
 Vector MLP::output(double* data, unsigned long width)

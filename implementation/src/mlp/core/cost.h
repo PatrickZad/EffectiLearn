@@ -11,7 +11,8 @@ namespace patrick
     public:
         virtual double cost(std::vector<LabledVector> datas, std::vector<Vector> outputs)=0;
         virtual double cost(LabledVector& input, Vector& output)=0;
-        virtual Vector derivative(Vector& output)=0;
+        virtual Vector derivative(std::vector<LabledVector> datas, std::vector<Vector> outputs)=0;
+        virtual Vector derivative(LabledVector data, Vector output)=0;
     };
     class CrossEntropy : public CostFunc
     {
@@ -19,6 +20,7 @@ namespace patrick
         double cost(std::vector<LabledVector> datas, std::vector<Vector> outputs);
         double cost(LabledVector& input, Vector& output);
         Vector derivative(std::vector<LabledVector> datas, std::vector<Vector> outputs);
+        Vector derivative(LabledVector data, Vector output);
     };
     /*
     class Regularizer
