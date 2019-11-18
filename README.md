@@ -1,5 +1,5 @@
 
 # implementations of basic ml algorithms
 
-*based on c++
-*wrapped by python
+* based on c++
+* wrapped by python
